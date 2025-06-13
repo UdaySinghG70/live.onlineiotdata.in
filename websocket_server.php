@@ -41,14 +41,28 @@ class LiveDataServer implements \Ratchet\MessageComponentInterface {
     }
 }
 
-// Create WebSocket server
+// Create event loop
+$loop = Factory::create();
+
+// Create WebSocket server with SSL
+$webSocket = new Server('0.0.0.0:8080', $loop);
+
+// Create secure WebSocket server
+$secureWebSocket = new SecureServer($webSocket, $loop, [
+    'local_cert' => '/etc/letsencrypt/live/live.onlineiotdata.in/fullchain.pem',
+    'local_pk' => '/etc/letsencrypt/live/live.onlineiotdata.in/privkey.pem',
+    'verify_peer' => false
+]);
+
+// Create Ratchet server
 $server = IoServer::factory(
     new HttpServer(
         new WsServer(
             new LiveDataServer()
         )
     ),
-    8080
+    $secureWebSocket,
+    $loop
 );
 
 $server->run(); 
