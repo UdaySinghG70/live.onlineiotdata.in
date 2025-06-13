@@ -35,7 +35,7 @@ $count_query = "SELECT COUNT(*) as total FROM logdata
                 WHERE device_id = ? 
                 AND (
                     CASE 
-                        WHEN date > ? AND date < ? THEN 1
+                        WHEN date >= ? AND date <= ? THEN 1
                         WHEN date = ? AND time >= ? AND date = ? AND time <= ? THEN 1
                         ELSE 0
                     END
@@ -60,7 +60,7 @@ $data_query = "SELECT date, time, data
                WHERE device_id = ? 
                AND (
                    CASE 
-                       WHEN date > ? AND date < ? THEN 1
+                       WHEN date >= ? AND date <= ? THEN 1
                        WHEN date = ? AND time >= ? AND date = ? AND time <= ? THEN 1
                        ELSE 0
                    END
