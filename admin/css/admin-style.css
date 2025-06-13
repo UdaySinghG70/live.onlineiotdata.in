@@ -1,0 +1,163 @@
+/* Common Admin Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #f8f9fa;
+    color: #2c3e50;
+}
+
+/* Header Styles */
+.admin-header {
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.brand h1 {
+    font-size: 1.25rem;
+    color: #2c3e50;
+    font-weight: 600;
+    margin: 0;
+}
+
+.admin-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #0067ac;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.admin-nav {
+    margin-top: 0.5rem;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #4a5568;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    background: #f8f9fa;
+    color: #0067ac;
+}
+
+.nav-link.active {
+    background: #e3f2fd;
+    color: #0067ac;
+}
+
+.nav-link.logout {
+    color: #e74c3c;
+}
+
+.nav-link.logout:hover {
+    background: #fee2e2;
+}
+
+/* Common Layout Styles */
+.dashboard {
+    margin-top: 140px;
+    padding: 2rem;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Loader */
+.loader {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.loader.active {
+    display: block;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .header-container {
+        padding: 1rem;
+    }
+
+    .header-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .nav-list {
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        margin: 0 -1rem;
+        padding: 0 1rem;
+    }
+
+    .nav-link {
+        white-space: nowrap;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .dashboard {
+        margin-top: 160px;
+        padding: 1rem;
+    }
+} 

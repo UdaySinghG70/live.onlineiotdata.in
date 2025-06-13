@@ -1,0 +1,88 @@
+.nav_control ul{
+		list-style: none;
+	}
+	.nav_control ul li a{
+		padding: 6px 5px;
+		color: #1d1c1c;
+	}
+	.nav_control ul li{
+		
+		margin: 10px 5px;
+		float: left;
+	}
+	.input_txt{
+		padding: 5px 5px;
+		border: 1px solid #ddd;
+		max-width: 110px;
+		float: left;
+		margin: 00px 20px 10px 0px;
+		box-shadow: inset 1px 1px 6px 2px #eee;
+		border-radius:4px; 
+	}
+	.btn{
+		padding: 6px 25px;
+		float: left;
+		margin: 0px 10px;
+		color: #A00;
+		background-color: #a7a4a4;;
+		font-weight: bold;
+		cursor: pointer;
+	}
+	.select_txt{
+	   padding: 4px 5px;
+    	float: left;
+		margin: 00px 20px 10px 0px;
+		border-color:#bbb;
+		min-width: 110px;
+		border-radius:4px; 
+	}
+	.data table {
+	   border: 1px solid #ddd; 
+	}
+	.data table tr th{
+	   padding: 5px ;
+		border: 1px solid #ddd;
+		text-align: center;
+	}
+    .data table tr td{
+	   padding: 2px;
+		border: 1px solid #ddd;
+    	font-size: 14px;
+	} 
+	form label{
+	   float: left;
+		padding: 6px 2px;
+		min-width:90px;
+	}
+	.nav_ctrl{
+	    color: #A00;
+		padding: 4px 10px;
+		background-color:#ddd; 
+		cursor: pointer;
+		
+	}
+	a.nav_ctrl{line-height: 32px;}
+
+	.data_container{
+		padding-left: 10%;
+		padding-right: 10%;
+	}
+	.header{
+		padding-left: 10%;
+		padding-right: 10%;
+		
+	}
+	
+	@media only screen and (max-width: 420px) {
+	.data_container{
+		padding-left: 5%;
+		padding-right: 5%;
+	}
+	.header{
+		padding-left: 5%;
+		padding-right: 5%;
+		
+	}
+		
+	}
+	

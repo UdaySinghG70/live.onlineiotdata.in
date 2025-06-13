@@ -1,0 +1,8 @@
+{
+    "require": {
+        "php-mqtt/client": "^2.2",
+        "cboden/ratchet": "^0.4",
+        "textalk/websocket": "^1.5",
+        "phpoffice/phpspreadsheet": "^1.29"
+    }
+}
