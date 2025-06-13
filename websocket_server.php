@@ -53,7 +53,7 @@ try {
     $loop = Factory::create();
     error_log("Event loop created");
 
-    // Create WebSocket server with SSL
+    // Create WebSocket server
     $webSocket = new Server('0.0.0.0:8081', $loop);
     error_log("WebSocket server created on 0.0.0.0:8081");
 
@@ -65,16 +65,15 @@ try {
     ]);
     error_log("Secure WebSocket server created");
 
-    // Create Ratchet server
-    $server = IoServer::factory(
-        new HttpServer(
-            new WsServer(
-                new LiveDataServer()
-            )
-        ),
-        $secureWebSocket,
-        $loop
+    // Create the WebSocket application
+    $app = new HttpServer(
+        new WsServer(
+            new LiveDataServer()
+        )
     );
+
+    // Create the server
+    $server = new IoServer($app, $secureWebSocket, $loop);
     error_log("Ratchet server created");
 
     $server->run();
