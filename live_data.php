@@ -271,7 +271,7 @@ $department_name = $userObj ? $userObj->department_name : '';
             loadFromCache();
 
             // Connect to WebSocket server
-            var ws = new WebSocket('wss://live.onlineiotdata.in:8081');
+            var ws = new WebSocket('ws://live.onlineiotdata.in:8081');
 
             ws.onopen = function() {
                 console.log('Connected to WebSocket server');
