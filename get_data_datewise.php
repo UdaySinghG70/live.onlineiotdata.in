@@ -286,136 +286,192 @@ if(empty($data)) {
 }
 
 .pagination-container {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin: 20px 0;
-	padding: 10px;
-	background: #f8f9fa;
-	border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0;
+    padding: 15px 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .pagination-info {
-	color: #4a5568;
-	font-size: 14px;
-	text-align: center;
+    color: #4a5568;
+    font-size: 14px;
+    font-weight: 500;
+    background: #f8fafc;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
 }
 
 .pagination-controls {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	justify-content: center;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .page-btn {
-	background: #fff;
-	border: 2px solid #e2e8f0;
-	padding: 8px 16px;
-	border-radius: 6px;
-	color: #4a5568;
-	font-weight: 500;
-	font-size: 14px;
-	cursor: pointer;
-	transition: all 0.2s ease;
-	min-width: 100px;
-	text-align: center;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 6px;
+    color: #4a5568;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 90px;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .page-btn:hover:not(:disabled) {
-	border-color: #0067ac;
-	color: #0067ac;
+    background: #f8fafc;
+    border-color: #0067ac;
+    color: #0067ac;
+    transform: translateY(-1px);
 }
 
 .page-btn:disabled {
-	opacity: 0.5;
-	cursor: not-allowed;
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f8fafc;
 }
 
 .page-btn.active {
-	background: #0067ac;
-	color: #fff;
-	border-color: #0067ac;
+    background: #0067ac;
+    color: #fff;
+    border-color: #0067ac;
+}
+
+.page-input-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8fafc;
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
 }
 
 .page-input {
-	width: 60px;
-	padding: 8px;
-	border: 2px solid #e2e8f0;
-	border-radius: 6px;
-	text-align: center;
-	font-size: 14px;
+    width: 50px;
+    padding: 6px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #4a5568;
+    background: #fff;
 }
 
 .page-input:focus {
-	outline: none;
-	border-color: #0067ac;
+    outline: none;
+    border-color: #0067ac;
+    box-shadow: 0 0 0 2px rgba(0, 103, 172, 0.1);
+}
+
+.page-total {
+    color: #4a5568;
+    font-size: 14px;
+    font-weight: 500;
 }
 
 @media (max-width: 768px) {
-	.data-table-container {
-		margin: 10px -15px;
-		border-radius: 0;
-	}
-	
-	.data-table th,
-	.data-table td {
-		padding: 8px;
-		font-size: 13px;
-		min-width: 100px;
-	}
-	
-	.data-table th:first-child {
-		min-width: 130px;
-	}
-	
-	.data-table td:first-child {
-		min-width: 130px;
-	}
+    .pagination-container {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 12px;
+        gap: 12px;
+    }
+    
+    .pagination-info {
+        text-align: center;
+        width: 100%;
+    }
+    
+    .pagination-controls {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .page-btn {
+        min-width: 80px;
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    
+    .page-input-container {
+        padding: 3px 8px;
+    }
+    
+    .page-input {
+        width: 40px;
+        padding: 4px;
+        font-size: 13px;
+    }
+    
+    .page-total {
+        font-size: 13px;
+    }
 }
 
 @media (max-width: 480px) {
-	.data-table-container {
-		margin: 5px -10px;
-	}
-	
-	.data-table th,
-	.data-table td {
-		padding: 6px;
-		font-size: 12px;
-		min-width: 90px;
-	}
-	
-	.data-table th:first-child,
-	.data-table td:first-child {
-		min-width: 120px;
-	}
+    .pagination-container {
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .pagination-info {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    
+    .page-btn {
+        min-width: 70px;
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+    
+    .page-input-container {
+        padding: 2px 6px;
+    }
+    
+    .page-input {
+        width: 35px;
+        padding: 3px;
+        font-size: 12px;
+    }
+    
+    .page-total {
+        font-size: 12px;
+    }
 }
 
 /* Add touch-friendly styles */
 @media (hover: none) {
-	.data-table tbody tr:hover {
-		background-color: transparent;
-	}
-	
-	.page-btn:active {
-		transform: scale(0.98);
-	}
-	
-	.export-btn:active {
-		transform: scale(0.98);
-	}
-	
-	.page-input {
-		font-size: 16px; /* Prevent zoom on iOS */
-	}
+    .page-btn:active {
+        transform: scale(0.98);
+    }
+    
+    .page-input {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
 }
 
 /* Fix for iOS input zoom */
 @supports (-webkit-touch-callout: none) {
-	.page-input {
-		font-size: 16px;
-	}
+    .page-input {
+        font-size: 16px;
+    }
 }
 
 /* Add horizontal scroll indicator */
@@ -455,10 +511,12 @@ if(empty($data)) {
 		<button class="page-btn" onclick="changePage(<?php echo $pg - 1 ?>)" <?php echo ($pg <= 1) ? 'disabled' : ''; ?>>
 			Previous
 		</button>
-		<input type="number" class="page-input" value="<?php echo $pg ?>" 
-			   min="1" max="<?php echo $total_pages ?>" 
-			   onchange="changePage(this.value)">
-		<span>of <?php echo $total_pages ?></span>
+		<div class="page-input-container">
+			<input type="number" class="page-input" value="<?php echo $pg ?>" 
+				   min="1" max="<?php echo $total_pages ?>" 
+				   onchange="changePage(this.value)">
+			<span class="page-total">of <?php echo $total_pages ?></span>
+		</div>
 		<button class="page-btn" onclick="changePage(<?php echo $pg + 1 ?>)" <?php echo ($pg >= $total_pages) ? 'disabled' : ''; ?>>
 			Next
 		</button>
