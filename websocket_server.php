@@ -49,6 +49,25 @@ class LiveDataServer implements \Ratchet\MessageComponentInterface {
 try {
     error_log("Starting WebSocket server...");
     
+    // Check SSL certificates
+    $certPath = '/etc/letsencrypt/live/live.onlineiotdata.in/fullchain.pem';
+    $keyPath = '/etc/letsencrypt/live/live.onlineiotdata.in/privkey.pem';
+    
+    if (!file_exists($certPath)) {
+        throw new Exception("SSL certificate not found at: " . $certPath);
+    }
+    if (!file_exists($keyPath)) {
+        throw new Exception("SSL key not found at: " . $keyPath);
+    }
+    if (!is_readable($certPath)) {
+        throw new Exception("SSL certificate not readable at: " . $certPath);
+    }
+    if (!is_readable($keyPath)) {
+        throw new Exception("SSL key not readable at: " . $keyPath);
+    }
+    
+    error_log("SSL certificates verified");
+    
     // Create event loop
     $loop = Factory::create();
     error_log("Event loop created");
@@ -59,8 +78,8 @@ try {
 
     // Create secure WebSocket server
     $secureWebSocket = new SecureServer($webSocket, $loop, [
-        'local_cert' => '/etc/letsencrypt/live/live.onlineiotdata.in/fullchain.pem',
-        'local_pk' => '/etc/letsencrypt/live/live.onlineiotdata.in/privkey.pem',
+        'local_cert' => $certPath,
+        'local_pk' => $keyPath,
         'verify_peer' => false,
         'allow_self_signed' => true
     ]);
