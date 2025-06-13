@@ -4,6 +4,9 @@ require 'vendor/autoload.php';
 use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
+use React\EventLoop\Factory;
+use React\Socket\SecureServer;
+use React\Socket\Server;
 
 class LiveDataServer implements \Ratchet\MessageComponentInterface {
     protected $clients;
@@ -46,6 +49,23 @@ class LiveDataServer implements \Ratchet\MessageComponentInterface {
 try {
     error_log("Starting WebSocket server...");
     
+    // Create event loop
+    $loop = Factory::create();
+    error_log("Event loop created");
+
+    // Create WebSocket server
+    $webSocket = new Server('0.0.0.0:8081', $loop);
+    error_log("WebSocket server created on 0.0.0.0:8081");
+
+    // Create secure WebSocket server
+    $secureWebSocket = new SecureServer($webSocket, $loop, [
+        'local_cert' => '/etc/letsencrypt/live/live.onlineiotdata.in/fullchain.pem',
+        'local_pk' => '/etc/letsencrypt/live/live.onlineiotdata.in/privkey.pem',
+        'verify_peer' => false,
+        'allow_self_signed' => true
+    ]);
+    error_log("Secure WebSocket server created");
+
     // Create the WebSocket application
     $app = new HttpServer(
         new WsServer(
@@ -54,8 +74,8 @@ try {
     );
 
     // Create the server
-    $server = IoServer::factory($app, 8081);
-    error_log("WebSocket server created and running on port 8081");
+    $server = new IoServer($app, $secureWebSocket, $loop);
+    error_log("Ratchet server created and running");
 
     $server->run();
 } catch (\Exception $e) {
