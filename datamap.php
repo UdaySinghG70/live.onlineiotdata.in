@@ -386,8 +386,172 @@ $department_name = $userObj ? $userObj->department_name : '';
         }
 
         @media (max-width: 768px) {
+            .main-container {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .device-selector {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .device-selector select,
+            .device-selector button {
+                width: 100%;
+                margin-left: 0 !important;
+            }
+
+            .data-summary {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .summary-item {
+                width: 100%;
+            }
+
+            .Data-graph {
+                margin-top: 15px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .graph-container {
+                min-width: 500px;
+                padding: 10px;
+            }
+
+            .days-header {
+                margin-left: 30px;
+            }
+
+            .months {
+                width: 30px;
+            }
+
+            .square {
+                width: 12px;
+                height: 12px;
+                margin-right: 4px;
+            }
+
+            .legend {
+                flex-wrap: wrap;
+                gap: 5px;
+                padding: 10px;
+            }
+
+            .legend-square {
+                width: 12px;
+                height: 12px;
+            }
+
+            .device-section {
+                padding: 15px;
+            }
+
+            .device-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .device-id {
+                font-size: 16px;
+            }
+
             .availability-grid {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 10px;
+            }
+
+            .param-card {
+                padding: 10px;
+                height: auto;
+                min-height: 90px;
+            }
+
+            .param-name {
+                font-size: 13px;
+            }
+
+            .status-indicator {
+                font-size: 12px;
+            }
+
+            .last-received {
+                font-size: 11px;
+                margin-top: 5px;
+            }
+
+            .no-data {
+                padding: 20px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 5px;
+            }
+
+            .header {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .graph-container {
+                min-width: 400px;
+            }
+
+            .square {
+                width: 10px;
+                height: 10px;
+                margin-right: 3px;
+            }
+
+            .legend-square {
+                width: 10px;
+                height: 10px;
+            }
+
+            .availability-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+
+            .param-card {
+                min-height: 80px;
+            }
+        }
+
+        /* Add touch-friendly styles */
+        @media (hover: none) {
+            .square:not(.empty):hover {
+                transform: none;
+            }
+
+            .square:not(.empty)[title]::after {
+                display: none;
+            }
+
+            .check-button {
+                padding: 12px 16px; /* Larger touch target */
+            }
+
+            select {
+                padding: 12px; /* Larger touch target */
             }
         }
     </style>

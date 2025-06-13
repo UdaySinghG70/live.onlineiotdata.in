@@ -91,14 +91,31 @@ if(empty($data)) {
 	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 	overflow-x: auto;
 	overflow-y: hidden;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: thin;
+	scrollbar-color: #0067ac #f0f0f0;
+}
+
+.data-table-container::-webkit-scrollbar {
+	height: 8px;
+}
+
+.data-table-container::-webkit-scrollbar-track {
+	background: #f0f0f0;
+	border-radius: 4px;
+}
+
+.data-table-container::-webkit-scrollbar-thumb {
+	background: #0067ac;
+	border-radius: 4px;
 }
 
 .data-table {
-	width: 100%;
+	width: max-content;
+	min-width: 100%;
 	border-collapse: collapse;
 	font-size: 15px;
 	white-space: nowrap;
-	table-layout: fixed;
 }
 
 .data-container {
@@ -107,12 +124,6 @@ if(empty($data)) {
 	background: #fff;
 	border-radius: 10px;
 	padding: 20px;
-}
-
-.data-table thead {
-	position: sticky;
-	top: 0;
-	z-index: 1;
 }
 
 .data-table th {
@@ -129,6 +140,9 @@ if(empty($data)) {
 	white-space: normal;
 	vertical-align: middle;
 	height: auto;
+	position: sticky;
+	top: 0;
+	z-index: 1;
 }
 
 .data-table th .unit-text {
@@ -141,7 +155,9 @@ if(empty($data)) {
 }
 
 .data-table th:first-child {
-	border-top-left-radius: 10px;
+	position: sticky;
+	left: 0;
+	z-index: 2;
 	min-width: 150px;
 }
 
@@ -181,9 +197,21 @@ if(empty($data)) {
 }
 
 .data-table td:first-child {
+	position: sticky;
+	left: 0;
+	z-index: 1;
+	background: #fff;
 	font-weight: 500;
 	color: #2d3748;
 	font-size: 15px;
+}
+
+.data-table tbody tr:nth-child(even) td:first-child {
+	background: #f8fafc;
+}
+
+.data-table tbody tr:hover td:first-child {
+	background: #ebf8ff;
 }
 
 .export-buttons {
@@ -332,7 +360,7 @@ if(empty($data)) {
 	
 	.data-table th,
 	.data-table td {
-		padding: 10px;
+		padding: 8px;
 		font-size: 13px;
 		min-width: 100px;
 	}
@@ -341,24 +369,76 @@ if(empty($data)) {
 		min-width: 130px;
 	}
 	
-	.export-btn {
-		width: 100%;
-		justify-content: center;
+	.data-table td:first-child {
+		min-width: 130px;
+	}
+}
+
+@media (max-width: 480px) {
+	.data-table-container {
+		margin: 5px -10px;
 	}
 	
-	.pagination-container {
-		flex-direction: column;
-		gap: 10px;
+	.data-table th,
+	.data-table td {
+		padding: 6px;
+		font-size: 12px;
+		min-width: 90px;
 	}
 	
-	.pagination-controls {
-		width: 100%;
-		flex-wrap: wrap;
+	.data-table th:first-child,
+	.data-table td:first-child {
+		min-width: 120px;
+	}
+}
+
+/* Add touch-friendly styles */
+@media (hover: none) {
+	.data-table tbody tr:hover {
+		background-color: transparent;
 	}
 	
-	.page-btn {
-		min-width: 80px;
-		padding: 8px 12px;
+	.page-btn:active {
+		transform: scale(0.98);
+	}
+	
+	.export-btn:active {
+		transform: scale(0.98);
+	}
+	
+	.page-input {
+		font-size: 16px; /* Prevent zoom on iOS */
+	}
+}
+
+/* Fix for iOS input zoom */
+@supports (-webkit-touch-callout: none) {
+	.page-input {
+		font-size: 16px;
+	}
+}
+
+/* Add horizontal scroll indicator */
+.data-table-container::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 30px;
+	background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.9));
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+.data-table-container:hover::after {
+	opacity: 1;
+}
+
+@media (max-width: 768px) {
+	.data-table-container::after {
+		opacity: 1;
 	}
 }
 </style>

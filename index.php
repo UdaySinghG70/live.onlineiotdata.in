@@ -306,15 +306,50 @@ $deviceArr=$ddao->getDeviceByUserName($user->user_name);
                 display: block;
                 margin-right: 0;
                 margin-bottom: 15px;
+                width: 100%;
             }
 
             .form-control {
                 width: 100%;
             }
 
+            .input-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .time-input {
+                width: 100% !important;
+            }
+
             .report-card {
-                height: auto;
-                min-height: calc(100vh - 100px);
+                padding: 15px;
+                margin-top: 10px;
+            }
+
+            .report-title {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+
+            .form-container {
+                padding: 15px;
+            }
+
+            .btn-primary {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .msg_task {
+                display: block;
+                margin: 10px 0 0 0;
+                text-align: center;
+            }
+
+            .data-container {
+                margin-top: 15px;
+                padding: 15px;
             }
 
             .ui-datepicker {
@@ -323,6 +358,100 @@ $deviceArr=$ddao->getDeviceByUserName($user->user_name);
                 top: 50% !important;
                 left: 50% !important;
                 transform: translate(-50%, -50%) !important;
+                z-index: 1000 !important;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .modal-title {
+                font-size: 20px;
+            }
+
+            .modal-message {
+                font-size: 14px;
+            }
+
+            .modal-button {
+                width: 100%;
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 10px;
+            }
+
+            .report-card {
+                padding: 10px;
+            }
+
+            .report-title {
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+
+            .form-container {
+                padding: 10px;
+            }
+
+            .form-group label {
+                font-size: 13px;
+            }
+
+            .form-control {
+                padding: 10px;
+                font-size: 13px;
+            }
+
+            .btn-primary {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+
+            .modal-content {
+                padding: 15px;
+            }
+
+            .modal-icon {
+                font-size: 36px;
+            }
+
+            .modal-title {
+                font-size: 18px;
+            }
+
+            .modal-message {
+                font-size: 13px;
+            }
+        }
+
+        /* Add touch-friendly styles */
+        @media (hover: none) {
+            .btn-primary:active {
+                transform: scale(0.98);
+            }
+
+            .form-control {
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+
+            select.form-control {
+                padding-right: 30px;
+            }
+
+            .ui-datepicker-calendar .ui-state-default {
+                padding: 10px; /* Larger touch target */
+            }
+        }
+
+        /* Fix for iOS input zoom */
+        @supports (-webkit-touch-callout: none) {
+            .form-control {
+                font-size: 16px;
             }
         }
 
