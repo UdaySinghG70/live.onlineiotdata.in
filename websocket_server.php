@@ -54,8 +54,8 @@ try {
     error_log("Event loop created");
 
     // Create WebSocket server with SSL
-    $webSocket = new Server('0.0.0.0:8080', $loop);
-    error_log("WebSocket server created on 0.0.0.0:8080");
+    $webSocket = new Server('0.0.0.0:8081', $loop);
+    error_log("WebSocket server created on 0.0.0.0:8081");
 
     // Create secure WebSocket server
     $secureWebSocket = new SecureServer($webSocket, $loop, [
