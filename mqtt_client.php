@@ -11,49 +11,136 @@ const MQTT_HOST = '103.212.120.23';
 const MQTT_PORT = 1883;
 const MQTT_USERNAME = 'admin';
 const MQTT_PASSWORD = 'BeagleBone99';
+const MAX_RECONNECT_ATTEMPTS = 10;
+const RECONNECT_DELAY = 5; // seconds
 
 // Generate a random client ID
 $clientId = 'php_mqtt_client_' . rand(1, 10000);
 
-try {
-    // Create MQTT client instance
-    $mqtt = new MqttClient(MQTT_HOST, MQTT_PORT, $clientId);
-    
-    // Set connection settings
-    $connectionSettings = (new ConnectionSettings)
-        ->setUsername(MQTT_USERNAME)
-        ->setPassword(MQTT_PASSWORD)
-        ->setKeepAliveInterval(60)
-        ->setLastWillTopic('client/disconnect')
-        ->setLastWillMessage('Client disconnected')
-        ->setLastWillQualityOfService(1);
-    
-    // Connect to the broker
-    $mqtt->connect($connectionSettings);
+// Initialize variables for reconnection logic
+$reconnectAttempts = 0;
+$lastReconnectTime = 0;
+$isConnected = false;
 
+function logError($message, $error = null) {
+    $timestamp = date('Y-m-d H:i:s');
+    $logMessage = "[$timestamp] $message";
+    if ($error) {
+        $logMessage .= " Error: " . $error->getMessage();
+    }
+    error_log($logMessage . "\n", 3, "logs/mqtt.log");
+}
+
+function connectToMqtt() {
+    global $mqtt, $reconnectAttempts, $lastReconnectTime, $isConnected;
+    
+    try {
+        // Create MQTT client instance
+        $mqtt = new MqttClient(MQTT_HOST, MQTT_PORT, $clientId);
+        
+        // Set connection settings
+        $connectionSettings = (new ConnectionSettings)
+            ->setUsername(MQTT_USERNAME)
+            ->setPassword(MQTT_PASSWORD)
+            ->setKeepAliveInterval(60)
+            ->setLastWillTopic('client/disconnect')
+            ->setLastWillMessage('Client disconnected')
+            ->setLastWillQualityOfService(1);
+        
+        // Connect to the broker
+        $mqtt->connect($connectionSettings);
+        $isConnected = true;
+        $reconnectAttempts = 0;
+        logError("Successfully connected to MQTT broker");
+        
+        // Set up message handlers
+        setupMessageHandlers();
+        
+        return true;
+    } catch (Exception $e) {
+        $isConnected = false;
+        logError("Failed to connect to MQTT broker", $e);
+        return false;
+    }
+}
+
+function setupMessageHandlers() {
+    global $mqtt;
+    
     // Message processing callback
     $mqtt->registerLoopEventHandler(function (MqttClient $mqtt, float $elapsedTime) {
         global $lastPing;
         if ($elapsedTime - $lastPing >= 30) {
-            $mqtt->ping();
-            $lastPing = $elapsedTime;
+            try {
+                $mqtt->ping();
+                $lastPing = $elapsedTime;
+            } catch (Exception $e) {
+                logError("Failed to send ping", $e);
+                handleDisconnection();
+            }
         }
     });
 
     // Subscribe to topics
     $mqtt->subscribe('+/live', function ($topic, $message) {
-        processLiveData($topic, $message);
+        try {
+            processLiveData($topic, $message);
+        } catch (Exception $e) {
+            logError("Error processing live data for topic: $topic", $e);
+        }
     }, 0);
 
     $mqtt->subscribe('+/data', function ($topic, $message) {
-        processLoggedData($topic, $message);
+        try {
+            processLoggedData($topic, $message);
+        } catch (Exception $e) {
+            logError("Error processing logged data for topic: $topic", $e);
+        }
     }, 0);
+}
 
-    // Start the event loop
-    $mqtt->loop(true);
+function handleDisconnection() {
+    global $reconnectAttempts, $lastReconnectTime, $isConnected;
+    
+    $isConnected = false;
+    $currentTime = time();
+    
+    // Check if we should attempt reconnection
+    if ($currentTime - $lastReconnectTime >= RECONNECT_DELAY) {
+        if ($reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+            $reconnectAttempts++;
+            $lastReconnectTime = $currentTime;
+            logError("Attempting reconnection (Attempt $reconnectAttempts of " . MAX_RECONNECT_ATTEMPTS . ")");
+            
+            if (connectToMqtt()) {
+                logError("Successfully reconnected to MQTT broker");
+                return true;
+            }
+        } else {
+            logError("Maximum reconnection attempts reached. Please check the MQTT broker status.");
+        }
+    }
+    
+    return false;
+}
 
+// Main execution
+try {
+    if (connectToMqtt()) {
+        // Start the event loop
+        while (true) {
+            try {
+                $mqtt->loop(true);
+            } catch (Exception $e) {
+                logError("Error in MQTT event loop", $e);
+                if (!handleDisconnection()) {
+                    break;
+                }
+            }
+        }
+    }
 } catch (Exception $e) {
-    // Silent fail
+    logError("Fatal error in MQTT client", $e);
 }
 
 /**
