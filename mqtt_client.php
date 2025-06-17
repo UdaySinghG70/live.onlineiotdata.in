@@ -168,7 +168,7 @@ function processLiveData($topic, $message) {
     $device_id = array_pop($values); // Get and remove device_id from the end
 
     // Create WebSocket client
-    $client = new Client("ws://localhost:8080");
+      $client = new Client("wss://live.onlineiotdata.in:8081");
     
     // Send data to WebSocket server
     $data = [
