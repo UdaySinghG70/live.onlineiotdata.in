@@ -1,0 +1,16 @@
+[Unit]
+Description=MQTT Client Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/live.onlineiotdata.in
+ExecStart=/usr/bin/php mqtt_client.php
+Restart=always
+RestartSec=10
+StandardOutput=append:/var/www/live.onlineiotdata.in/logs/mqtt.log
+StandardError=append:/var/www/live.onlineiotdata.in/logs/mqtt.log
+
+[Install]
+WantedBy=multi-user.target 

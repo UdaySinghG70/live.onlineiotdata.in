@@ -1,0 +1,16 @@
+[Unit]
+Description=MQTT Watchdog Service
+After=network.target mqtt-client.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/live.onlineiotdata.in
+ExecStart=/usr/bin/php mqtt_watchdog.php
+Restart=always
+RestartSec=10
+StandardOutput=append:/var/www/live.onlineiotdata.in/logs/watchdog.log
+StandardError=append:/var/www/live.onlineiotdata.in/logs/watchdog.log
+
+[Install]
+WantedBy=multi-user.target 
