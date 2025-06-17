@@ -43,6 +43,10 @@ class LiveDataServer implements \Ratchet\MessageComponentInterface {
     public function onOpen(\Ratchet\ConnectionInterface $conn) {
         $this->clients->attach($conn);
         logWithTimestamp("New connection established: " . $conn->remoteAddress . " (Total clients: " . count($this->clients) . ")");
+        
+        // Log connection headers for debugging
+        $headers = $conn->httpRequest->getHeaders();
+        logWithTimestamp("Connection headers: " . json_encode($headers));
     }
 
     public function onMessage(\Ratchet\ConnectionInterface $from, $msg) {
@@ -116,16 +120,18 @@ try {
     $webSocket = new Server('0.0.0.0:8081', $loop);
     logWithTimestamp("WebSocket server created on 0.0.0.0:8081");
 
-    // Create secure WebSocket server
+    // Create secure WebSocket server with proper SSL context
     $secureWebSocket = new SecureServer($webSocket, $loop, [
         'local_cert' => $certPath,
         'local_pk' => $keyPath,
         'verify_peer' => false,
-        'allow_self_signed' => true
+        'allow_self_signed' => true,
+        'security_level' => 1,
+        'ciphers' => 'HIGH:!SSLv2:!SSLv3'
     ]);
     logWithTimestamp("Secure WebSocket server created");
 
-    // Create the WebSocket application
+    // Create the WebSocket application with CORS headers
     $app = new HttpServer(
         new WsServer(
             new LiveDataServer()

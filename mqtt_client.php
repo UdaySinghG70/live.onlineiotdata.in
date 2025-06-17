@@ -171,7 +171,10 @@ function processLiveData($topic, $message) {
 
     try {
         // Create WebSocket client with proper configuration
-        $client = new Client("wss://live.onlineiotdata.in:8081", [
+        $wsUrl = "wss://live.onlineiotdata.in:8081";
+        logError("Attempting to connect to WebSocket server at: " . $wsUrl);
+        
+        $client = new Client($wsUrl, [
             'timeout' => 5,
             'headers' => [
                 'Origin' => 'https://live.onlineiotdata.in',
@@ -185,12 +188,17 @@ function processLiveData($topic, $message) {
             'values' => $values
         ];
         
-        $client->send(json_encode($data));
+        $jsonData = json_encode($data);
+        logError("Sending data to WebSocket: " . $jsonData);
+        
+        $client->send($jsonData);
         $client->close();
         logError("Successfully sent live data to WebSocket for device: $device_id");
         
     } catch (Exception $e) {
         logError("Error processing live data for topic: $topic Error: " . $e->getMessage());
+        // Log additional connection details
+        logError("Connection details - Device ID: $device_id, Values count: " . count($values));
     }
     
     // Query modem_params table
