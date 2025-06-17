@@ -21,7 +21,7 @@ const MQTT_PASSWORD = 'BeagleBone99';
 // Generate a random client ID
 $clientId = 'php_mqtt_client_' . rand(1, 10000);
 
-// Add this at the top of the file after the requires
+// Add at the top of the file after the require statements
 $processedMessages = [];
 
 try {
@@ -63,13 +63,53 @@ try {
     // Subscribe to topics
     logWithTimestamp("Subscribing to MQTT topics");
     $mqtt->subscribe('+/live', function ($topic, $message) {
+        global $processedMessages;
+        $messageKey = md5($message);
+        
+        // Check if message was already processed
+        if (isset($processedMessages[$messageKey])) {
+            logWithTimestamp("Skipping duplicate live data message");
+            return;
+        }
+        
         logWithTimestamp("Received live data on topic: " . $topic);
         processLiveData($topic, $message);
+        
+        // Store message hash with timestamp
+        $processedMessages[$messageKey] = time();
+        
+        // Clean up old message hashes (older than 5 minutes)
+        $cutoff = time() - 300;
+        foreach ($processedMessages as $key => $timestamp) {
+            if ($timestamp < $cutoff) {
+                unset($processedMessages[$key]);
+            }
+        }
     }, 0);
 
     $mqtt->subscribe('+/data', function ($topic, $message) {
+        global $processedMessages;
+        $messageKey = md5($message);
+        
+        // Check if message was already processed
+        if (isset($processedMessages[$messageKey])) {
+            logWithTimestamp("Skipping duplicate logged data message");
+            return;
+        }
+        
         logWithTimestamp("Received logged data on topic: " . $topic);
         processLoggedData($topic, $message);
+        
+        // Store message hash with timestamp
+        $processedMessages[$messageKey] = time();
+        
+        // Clean up old message hashes (older than 5 minutes)
+        $cutoff = time() - 300;
+        foreach ($processedMessages as $key => $timestamp) {
+            if ($timestamp < $cutoff) {
+                unset($processedMessages[$key]);
+            }
+        }
     }, 0);
 
     logWithTimestamp("Starting MQTT event loop");
@@ -87,18 +127,8 @@ try {
  * Format: value1,value2,value3,...,valuen,device_id
  */
 function processLiveData($topic, $message) {
-    global $processedMessages;
     try {
         logWithTimestamp("Processing live data message: " . $message);
-        
-        // Check if this message has already been processed
-        $messageHash = md5($message);
-        if (isset($processedMessages[$messageHash])) {
-            logWithTimestamp("Skipping duplicate live data message");
-            return;
-        }
-        $processedMessages[$messageHash] = true;
-        
         $values = explode(',', $message);
         $device_id = array_pop($values); // Get and remove device_id from the end
 
@@ -131,18 +161,8 @@ function processLiveData($topic, $message) {
  * Format: DDMMYYHHMM,value1,value2,...,valuen,device_id
  */
 function processLoggedData($topic, $message) {
-    global $processedMessages;
     try {
         logWithTimestamp("Processing logged data message: " . $message);
-        
-        // Check if this message has already been processed
-        $messageHash = md5($message);
-        if (isset($processedMessages[$messageHash])) {
-            logWithTimestamp("Skipping duplicate logged data message");
-            return;
-        }
-        $processedMessages[$messageHash] = true;
-        
         $values = explode(',', $message);
         $device_id = array_pop($values); // Get and remove device_id from the end
         $timestamp = array_shift($values); // Get and remove timestamp from the start
