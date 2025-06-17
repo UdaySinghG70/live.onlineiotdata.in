@@ -6,6 +6,29 @@ use PhpMqtt\Client\MqttClient;
 use PhpMqtt\Client\ConnectionSettings;
 use WebSocket\Client;
 
+// PID file locking mechanism
+$pidFile = __DIR__ . '/mqtt_client.pid';
+
+// Check if another instance is already running
+if (file_exists($pidFile)) {
+    $pid = file_get_contents($pidFile);
+    if (posix_kill($pid, 0)) {
+        die("Another instance of MQTT client is already running with PID: $pid\n");
+    }
+    // If we get here, the PID file exists but the process is not running
+    unlink($pidFile);
+}
+
+// Create PID file
+file_put_contents($pidFile, getmypid());
+
+// Register shutdown function to remove PID file
+register_shutdown_function(function() use ($pidFile) {
+    if (file_exists($pidFile)) {
+        unlink($pidFile);
+    }
+});
+
 // MQTT Configuration
 const MQTT_HOST = '103.212.120.23';
 const MQTT_PORT = 1883;
