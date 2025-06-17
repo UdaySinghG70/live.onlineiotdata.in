@@ -177,16 +177,19 @@ $department_name = $userObj ? $userObj->department_name : '';
             color: #666;
             font-size: 12px;
             gap: 4px;
+            width: calc(31 * 21px); /* 31 days * (15px width + 6px margin) */
         }
 
         .day-number {
             width: 15px;
             text-align: center;
             margin-right: 6px;
+            flex-shrink: 0;
         }
 
         .graph-content {
             display: flex;
+            width: 100%;
         }
 
         .months {
@@ -198,6 +201,7 @@ $department_name = $userObj ? $userObj->department_name : '';
             padding-right: 10px;
             width: 40px;
             padding-top: 0;
+            flex-shrink: 0;
         }
 
         .month {
@@ -216,6 +220,7 @@ $department_name = $userObj ? $userObj->department_name : '';
             flex-direction: column;
             gap: 8px;
             padding-top: 0;
+            width: calc(31 * 21px); /* 31 days * (15px width + 6px margin) */
         }
 
         .month-row {
@@ -223,6 +228,7 @@ $department_name = $userObj ? $userObj->department_name : '';
             gap: 4px;
             height: 15px;
             margin-bottom: 2px;
+            width: 100%;
         }
 
         .square {
@@ -771,6 +777,10 @@ $department_name = $userObj ? $userObj->department_name : '';
 
                     squaresContainer.append(monthRow);
                 });
+
+                // Ensure the graph container has proper width
+                const totalWidth = 31 * 21; // 31 days * (15px width + 6px margin)
+                $('.graph-container').css('min-width', `${totalWidth + 50}px`); // Add extra space for month labels
             }
 
             // Initialize graph with current year
