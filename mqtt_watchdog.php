@@ -5,6 +5,9 @@ const MQTT_LOG_FILE = 'logs/mqtt.log';
 const MAX_LOG_SIZE = 10 * 1024 * 1024; // 10MB
 const MAX_LOG_FILES = 5; // Keep last 5 rotated log files
 
+// Set default timezone to IST
+date_default_timezone_set('Asia/Kolkata');
+
 function logWatchdog($message) {
     $timestamp = date('Y-m-d H:i:s');
     $logMessage = "[$timestamp] Watchdog: $message\n";

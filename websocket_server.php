@@ -11,10 +11,25 @@ use React\EventLoop\Factory;
 use React\Socket\SecureServer;
 use React\Socket\Server;
 
+// Set default timezone to IST
+date_default_timezone_set('Asia/Kolkata');
+
 // Custom logging function with timestamp
 function logWithTimestamp($message) {
     $timestamp = date('Y-m-d H:i:s');
-    error_log("[$timestamp] $message");
+    $logMessage = "[$timestamp] $message\n";
+    
+    // Ensure logs directory exists and is writable
+    if (!file_exists('logs')) {
+        mkdir('logs', 0777, true);
+    }
+    
+    // Try to write to log file
+    $logFile = 'logs/websocket.log';
+    if (file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX) === false) {
+        // If we can't write to the log file, try to write to system error log
+        error_log("Failed to write to WebSocket log file: $logMessage");
+    }
 }
 
 class LiveDataServer implements \Ratchet\MessageComponentInterface {
@@ -27,30 +42,40 @@ class LiveDataServer implements \Ratchet\MessageComponentInterface {
 
     public function onOpen(\Ratchet\ConnectionInterface $conn) {
         $this->clients->attach($conn);
-        logWithTimestamp("New connection established: " . $conn->remoteAddress);
+        logWithTimestamp("New connection established: " . $conn->remoteAddress . " (Total clients: " . count($this->clients) . ")");
     }
 
     public function onMessage(\Ratchet\ConnectionInterface $from, $msg) {
-        logWithTimestamp("Received message: " . $msg);
-        // Broadcast message to all connected clients
-        foreach ($this->clients as $client) {
-            $client->send($msg);
+        try {
+            logWithTimestamp("Received message from " . $from->remoteAddress . ": " . $msg);
+            // Broadcast message to all connected clients
+            foreach ($this->clients as $client) {
+                $client->send($msg);
+            }
+            logWithTimestamp("Message broadcasted to " . count($this->clients) . " clients");
+        } catch (\Exception $e) {
+            logWithTimestamp("Error processing message: " . $e->getMessage());
         }
     }
 
     public function onClose(\Ratchet\ConnectionInterface $conn) {
         $this->clients->detach($conn);
-        logWithTimestamp("Connection closed: " . $conn->remoteAddress);
+        logWithTimestamp("Connection closed: " . $conn->remoteAddress . " (Remaining clients: " . count($this->clients) . ")");
     }
 
     public function onError(\Ratchet\ConnectionInterface $conn, \Exception $e) {
-        logWithTimestamp("Error: " . $e->getMessage());
+        logWithTimestamp("Error with connection " . $conn->remoteAddress . ": " . $e->getMessage());
         $conn->close();
     }
 
     public function broadcast($message) {
-        foreach ($this->clients as $client) {
-            $client->send($message);
+        try {
+            foreach ($this->clients as $client) {
+                $client->send($message);
+            }
+            logWithTimestamp("Broadcast message sent to " . count($this->clients) . " clients");
+        } catch (\Exception $e) {
+            logWithTimestamp("Error broadcasting message: " . $e->getMessage());
         }
     }
 }

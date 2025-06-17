@@ -23,6 +23,8 @@ $lastReconnectTime = 0;
 $isConnected = false;
 
 function logError($message, $error = null) {
+    // Set timezone to IST
+    date_default_timezone_set('Asia/Kolkata');
     $timestamp = date('Y-m-d H:i:s');
     $logMessage = "[$timestamp] $message";
     if ($error) {
@@ -167,17 +169,29 @@ function processLiveData($topic, $message) {
     $values = explode(',', $message);
     $device_id = array_pop($values); // Get and remove device_id from the end
 
-    // Create WebSocket client
-      $client = new Client("wss://live.onlineiotdata.in:8081");
-    
-    // Send data to WebSocket server
-    $data = [
-        'device_id' => $device_id,
-        'values' => $values
-    ];
-    
-    $client->send(json_encode($data));
-    $client->close();
+    try {
+        // Create WebSocket client with proper configuration
+        $client = new Client("wss://live.onlineiotdata.in:8081", [
+            'timeout' => 5,
+            'headers' => [
+                'Origin' => 'https://live.onlineiotdata.in',
+                'User-Agent' => 'MQTT-Client'
+            ]
+        ]);
+        
+        // Send data to WebSocket server
+        $data = [
+            'device_id' => $device_id,
+            'values' => $values
+        ];
+        
+        $client->send(json_encode($data));
+        $client->close();
+        logError("Successfully sent live data to WebSocket for device: $device_id");
+        
+    } catch (Exception $e) {
+        logError("Error processing live data for topic: $topic Error: " . $e->getMessage());
+    }
     
     // Query modem_params table
     $query = "SELECT param_name, position, unit FROM modem_params WHERE device_id = '$device_id' ORDER BY position";
