@@ -17,10 +17,13 @@ $clientId = 'php_mqtt_client_' . rand(1, 10000);
 
 try {
     error_log("Starting MQTT client...");
+    error_log("PHP version: " . PHP_VERSION);
+    error_log("Current working directory: " . getcwd());
+    error_log("MQTT Configuration - Host: " . MQTT_HOST . ", Port: " . MQTT_PORT);
     
     // Create MQTT client instance
     $mqtt = new MqttClient(MQTT_HOST, MQTT_PORT, $clientId);
-    error_log("MQTT client instance created");
+    error_log("MQTT client instance created with client ID: " . $clientId);
     
     // Set connection settings
     $connectionSettings = (new ConnectionSettings)
@@ -30,6 +33,8 @@ try {
         ->setLastWillTopic('client/disconnect')
         ->setLastWillMessage('Client disconnected')
         ->setLastWillQualityOfService(1);
+    
+    error_log("Connection settings configured");
     
     // Connect to the broker
     error_log("Connecting to MQTT broker at " . MQTT_HOST . ":" . MQTT_PORT);

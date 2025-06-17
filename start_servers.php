@@ -1,12 +1,12 @@
 <?php
 echo "Starting servers...\n";
 
-// Start WebSocket server in background
-$websocket = popen('php websocket_server.php > websocket.log 2>&1 &', 'r');
+// Start WebSocket server in background with full error reporting
+$websocket = popen('php -d display_errors=1 -d error_reporting=E_ALL websocket_server.php >> websocket.log 2>&1 &', 'r');
 echo "WebSocket server started (check websocket.log for output)\n";
 
-// Start MQTT client in background
-$mqtt = popen('php mqtt_client.php > mqtt.log 2>&1 &', 'r');
+// Start MQTT client in background with full error reporting
+$mqtt = popen('php -d display_errors=1 -d error_reporting=E_ALL mqtt_client.php >> mqtt.log 2>&1 &', 'r');
 echo "MQTT client started (check mqtt.log for output)\n";
 
 echo "\nBoth servers are running. Check the log files for details:\n";

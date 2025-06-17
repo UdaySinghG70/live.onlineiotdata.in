@@ -48,10 +48,16 @@ class LiveDataServer implements \Ratchet\MessageComponentInterface {
 
 try {
     error_log("Starting WebSocket server...");
+    error_log("PHP version: " . PHP_VERSION);
+    error_log("Current working directory: " . getcwd());
     
     // Check SSL certificates
     $certPath = '/etc/letsencrypt/live/live.onlineiotdata.in/fullchain.pem';
     $keyPath = '/etc/letsencrypt/live/live.onlineiotdata.in/privkey.pem';
+    
+    error_log("Checking SSL certificates...");
+    error_log("Certificate path: " . $certPath);
+    error_log("Key path: " . $keyPath);
     
     if (!file_exists($certPath)) {
         throw new Exception("SSL certificate not found at: " . $certPath);
