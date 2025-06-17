@@ -1,10 +1,25 @@
 <?php
 echo "Starting servers...\n";
 
-// Create logs directory if it doesn't exist
+// Create logs directory if it doesn't exist and set permissions
 if (!file_exists('logs')) {
     mkdir('logs', 0777, true);
     echo "Created logs directory\n";
+} else {
+    // Ensure proper permissions on existing logs directory
+    chmod('logs', 0777);
+    echo "Using existing logs directory\n";
+}
+
+// Initialize log files with proper permissions
+$logFiles = ['mqtt.log', 'watchdog.log', 'websocket.log'];
+foreach ($logFiles as $logFile) {
+    $logPath = "logs/$logFile";
+    if (!file_exists($logPath)) {
+        touch($logPath);
+        chmod($logPath, 0666);
+        echo "Created $logFile\n";
+    }
 }
 
 // Start WebSocket server in background with nohup
