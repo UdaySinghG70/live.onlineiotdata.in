@@ -160,10 +160,15 @@ $department_name = $userObj ? $userObj->department_name : '';
         .Data-graph {
             margin-top: 20px;
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .graph-container {
-            min-width: 600px;
+            min-width: 800px;
             padding: 20px;
             position: relative;
             display: flex;
@@ -172,24 +177,34 @@ $department_name = $userObj ? $userObj->department_name : '';
 
         .days-header {
             display: flex;
-            margin-left: 40px;
+            margin-left: 50px;
             margin-bottom: 4px;
             color: #666;
             font-size: 12px;
             gap: 4px;
-            width: calc(31 * 21px); /* 31 days * (15px width + 6px margin) */
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 2;
+            padding-bottom: 8px;
+            width: calc(100% - 50px);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
         .day-number {
-            width: 15px;
+            width: 20px;
             text-align: center;
             margin-right: 6px;
             flex-shrink: 0;
+            min-width: 20px;
         }
 
         .graph-content {
             display: flex;
-            width: 100%;
+            position: relative;
         }
 
         .months {
@@ -199,20 +214,24 @@ $department_name = $userObj ? $userObj->department_name : '';
             color: #666;
             font-size: 14px;
             padding-right: 10px;
-            width: 40px;
+            width: 50px;
             padding-top: 0;
-            flex-shrink: 0;
+            position: sticky;
+            left: 0;
+            background: #fff;
+            z-index: 1;
         }
 
         .month {
-            height: 15px;
-            line-height: 15px;
+            height: 20px;
+            line-height: 20px;
             text-align: right;
             padding-right: 8px;
             margin-bottom: 2px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
+            white-space: nowrap;
         }
 
         .squares-container {
@@ -220,26 +239,50 @@ $department_name = $userObj ? $userObj->department_name : '';
             flex-direction: column;
             gap: 8px;
             padding-top: 0;
-            width: calc(31 * 21px); /* 31 days * (15px width + 6px margin) */
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            width: calc(100% - 50px);
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
         .month-row {
             display: flex;
             gap: 4px;
-            height: 15px;
+            height: 20px;
             margin-bottom: 2px;
-            width: 100%;
+            align-items: center;
+            min-width: max-content;
         }
 
         .square {
-            width: 15px;
-            height: 15px;
+            width: 20px;
+            height: 20px;
             background-color: #ebedf0;
             border-radius: 3px;
             transition: transform 0.1s ease;
             position: relative;
             flex-shrink: 0;
             margin-right: 6px;
+            min-width: 20px;
+        }
+
+        /* Add scroll indicator */
+        .Data-graph::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 30px;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.9));
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .Data-graph:hover::after {
+            opacity: 1;
         }
 
         .square.empty {
@@ -426,28 +469,54 @@ $department_name = $userObj ? $userObj->department_name : '';
             }
 
             .Data-graph {
-                margin-top: 15px;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
+                margin: 15px -15px;
+                border-radius: 0;
             }
 
             .graph-container {
-                min-width: 500px;
-                padding: 10px;
+                min-width: 600px;
+                padding: 15px;
             }
 
             .days-header {
-                margin-left: 30px;
+                margin-left: 40px;
+                padding-bottom: 6px;
+                width: calc(100% - 40px);
+            }
+
+            .day-number {
+                width: 16px;
+                min-width: 16px;
+                margin-right: 4px;
             }
 
             .months {
-                width: 30px;
+                width: 40px;
+            }
+
+            .month {
+                height: 16px;
+                line-height: 16px;
+                font-size: 12px;
+            }
+
+            .month-row {
+                height: 16px;
             }
 
             .square {
-                width: 12px;
-                height: 12px;
+                width: 16px;
+                height: 16px;
+                min-width: 16px;
                 margin-right: 4px;
+            }
+
+            .squares-container {
+                width: calc(100% - 40px);
+            }
+
+            .Data-graph::after {
+                opacity: 1;
             }
 
             .legend {
@@ -519,13 +588,46 @@ $department_name = $userObj ? $userObj->department_name : '';
             }
 
             .graph-container {
-                min-width: 400px;
+                min-width: 500px;
+                padding: 10px;
+            }
+
+            .days-header {
+                margin-left: 35px;
+                padding-bottom: 4px;
+                width: calc(100% - 35px);
+            }
+
+            .day-number {
+                width: 14px;
+                min-width: 14px;
+                margin-right: 3px;
+                font-size: 11px;
+            }
+
+            .months {
+                width: 35px;
+            }
+
+            .month {
+                height: 14px;
+                line-height: 14px;
+                font-size: 11px;
+            }
+
+            .month-row {
+                height: 14px;
             }
 
             .square {
-                width: 10px;
-                height: 10px;
+                width: 14px;
+                height: 14px;
+                min-width: 14px;
                 margin-right: 3px;
+            }
+
+            .squares-container {
+                width: calc(100% - 35px);
             }
 
             .legend-square {
@@ -547,9 +649,9 @@ $department_name = $userObj ? $userObj->department_name : '';
             .square:not(.empty):hover {
                 transform: none;
             }
-
-            .square:not(.empty)[title]::after {
-                display: none;
+            
+            .square:not(.empty):active {
+                transform: scale(1.2);
             }
 
             .check-button {
@@ -777,10 +879,6 @@ $department_name = $userObj ? $userObj->department_name : '';
 
                     squaresContainer.append(monthRow);
                 });
-
-                // Ensure the graph container has proper width
-                const totalWidth = 31 * 21; // 31 days * (15px width + 6px margin)
-                $('.graph-container').css('min-width', `${totalWidth + 50}px`); // Add extra space for month labels
             }
 
             // Initialize graph with current year
@@ -884,6 +982,39 @@ $department_name = $userObj ? $userObj->department_name : '';
                     }
                 });
             }
+
+            // Function to ensure perfect alignment
+            function ensureAlignment() {
+                const dayNumbers = $('.day-number');
+                const squares = $('.month-row:first-child .square:not(.empty)');
+                
+                // Ensure same number of elements
+                if (dayNumbers.length !== squares.length) {
+                    console.warn('Mismatch in number of days and squares');
+                    return;
+                }
+
+                // Set explicit widths
+                dayNumbers.each(function(index) {
+                    const square = squares.eq(index);
+                    const squareWidth = square.outerWidth();
+                    $(this).css('width', squareWidth + 'px');
+                    $(this).css('min-width', squareWidth + 'px');
+                });
+            }
+
+            // Call on load and resize
+            ensureAlignment();
+            $(window).on('resize', ensureAlignment);
+
+            // Update scroll synchronization
+            $('.squares-container').on('scroll', function() {
+                $('.days-header').scrollLeft($(this).scrollLeft());
+            });
+
+            $('.days-header').on('scroll', function() {
+                $('.squares-container').scrollLeft($(this).scrollLeft());
+            });
         });
     </script>
 </body>
