@@ -1,4 +1,7 @@
 <?php
+// Suppress deprecation notices
+error_reporting(E_ALL & ~E_DEPRECATED);
+
 require 'vendor/autoload.php';
 
 use Ratchet\Server\IoServer;
