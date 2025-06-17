@@ -37,21 +37,10 @@ $mqtt_cmd = 'nohup php -d display_errors=1 -d error_reporting="E_ALL & ~E_DEPREC
 exec($mqtt_cmd);
 echo "MQTT client started (check logs/mqtt.log for output)\n";
 
-// Start log monitor in background with nohup
-$log_monitor_cmd = 'nohup php -d display_errors=1 -d error_reporting="E_ALL & ~E_DEPRECATED" log_monitor.php >> logs/log_monitor.log 2>&1 &';
-exec($log_monitor_cmd);
-echo "Log monitor started (check logs/log_monitor.log for output)\n";
-
 echo "\nAll servers are running. Check the log files for details:\n";
 echo "- logs/websocket.log for WebSocket server output\n";
 echo "- logs/mqtt.log for MQTT client output\n";
 echo "- logs/watchdog.log for MQTT watchdog output\n";
-echo "- logs/log_monitor.log for log monitor output\n";
-echo "\nTo watch logs in real-time from your local PC, subscribe to these MQTT topics:\n";
-echo "- server/logs/mqtt\n";
-echo "- server/logs/watchdog\n";
-echo "- server/logs/websocket\n";
-echo "- server/logs/status\n";
 echo "\nPress Ctrl+C to stop all servers.\n";
 
 // Keep the script running
