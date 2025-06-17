@@ -72,17 +72,20 @@ try {
             return;
         }
         
-        logWithTimestamp("Received live data on topic: " . $topic);
-        processLiveData($topic, $message);
-        
-        // Store message hash with timestamp
-        $processedMessages[$messageKey] = time();
-        
-        // Clean up old message hashes (older than 5 minutes)
-        $cutoff = time() - 300;
-        foreach ($processedMessages as $key => $timestamp) {
-            if ($timestamp < $cutoff) {
-                unset($processedMessages[$key]);
+        // Only process if topic ends with /live
+        if (substr($topic, -5) === '/live') {
+            logWithTimestamp("Received live data on topic: " . $topic);
+            processLiveData($topic, $message);
+            
+            // Store message hash with timestamp
+            $processedMessages[$messageKey] = time();
+            
+            // Clean up old message hashes (older than 5 minutes)
+            $cutoff = time() - 300;
+            foreach ($processedMessages as $key => $timestamp) {
+                if ($timestamp < $cutoff) {
+                    unset($processedMessages[$key]);
+                }
             }
         }
     }, 0);
@@ -97,17 +100,20 @@ try {
             return;
         }
         
-        logWithTimestamp("Received logged data on topic: " . $topic);
-        processLoggedData($topic, $message);
-        
-        // Store message hash with timestamp
-        $processedMessages[$messageKey] = time();
-        
-        // Clean up old message hashes (older than 5 minutes)
-        $cutoff = time() - 300;
-        foreach ($processedMessages as $key => $timestamp) {
-            if ($timestamp < $cutoff) {
-                unset($processedMessages[$key]);
+        // Only process if topic ends with /data
+        if (substr($topic, -5) === '/data') {
+            logWithTimestamp("Received logged data on topic: " . $topic);
+            processLoggedData($topic, $message);
+            
+            // Store message hash with timestamp
+            $processedMessages[$messageKey] = time();
+            
+            // Clean up old message hashes (older than 5 minutes)
+            $cutoff = time() - 300;
+            foreach ($processedMessages as $key => $timestamp) {
+                if ($timestamp < $cutoff) {
+                    unset($processedMessages[$key]);
+                }
             }
         }
     }, 0);
