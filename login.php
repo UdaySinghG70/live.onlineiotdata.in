@@ -4,7 +4,7 @@
 	<title>Login - Cloud Data Monitoring</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+	<link rel="icon" type="image/png" href="images/icons/favicon.png"/>
 	<style>
 		* {
 			margin: 0;

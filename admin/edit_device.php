@@ -49,7 +49,7 @@ include_once 'data_types_arr.php';
     <title>Edit Device - Cloud Data Monitoring</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/png" href="../images/icons/favicon.ico"/>
+<link rel="icon" type="image/png" href="../images/icons/favicon.png"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="css/admin-style.css">
     <!-- Add Select2 CSS -->
