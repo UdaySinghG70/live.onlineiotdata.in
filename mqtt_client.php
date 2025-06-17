@@ -6,6 +6,12 @@ use PhpMqtt\Client\MqttClient;
 use PhpMqtt\Client\ConnectionSettings;
 use WebSocket\Client;
 
+// Custom logging function with timestamp
+function logWithTimestamp($message) {
+    $timestamp = date('Y-m-d H:i:s');
+    error_log("[$timestamp] $message");
+}
+
 // MQTT Configuration
 const MQTT_HOST = '103.212.120.23';
 const MQTT_PORT = 1883;
@@ -16,14 +22,14 @@ const MQTT_PASSWORD = 'BeagleBone99';
 $clientId = 'php_mqtt_client_' . rand(1, 10000);
 
 try {
-    error_log("Starting MQTT client...");
-    error_log("PHP version: " . PHP_VERSION);
-    error_log("Current working directory: " . getcwd());
-    error_log("MQTT Configuration - Host: " . MQTT_HOST . ", Port: " . MQTT_PORT);
+    logWithTimestamp("Starting MQTT client...");
+    logWithTimestamp("PHP version: " . PHP_VERSION);
+    logWithTimestamp("Current working directory: " . getcwd());
+    logWithTimestamp("MQTT Configuration - Host: " . MQTT_HOST . ", Port: " . MQTT_PORT);
     
     // Create MQTT client instance
     $mqtt = new MqttClient(MQTT_HOST, MQTT_PORT, $clientId);
-    error_log("MQTT client instance created with client ID: " . $clientId);
+    logWithTimestamp("MQTT client instance created with client ID: " . $clientId);
     
     // Set connection settings
     $connectionSettings = (new ConnectionSettings)
@@ -34,12 +40,12 @@ try {
         ->setLastWillMessage('Client disconnected')
         ->setLastWillQualityOfService(1);
     
-    error_log("Connection settings configured");
+    logWithTimestamp("Connection settings configured");
     
     // Connect to the broker
-    error_log("Connecting to MQTT broker at " . MQTT_HOST . ":" . MQTT_PORT);
+    logWithTimestamp("Connecting to MQTT broker at " . MQTT_HOST . ":" . MQTT_PORT);
     $mqtt->connect($connectionSettings);
-    error_log("Connected to MQTT broker successfully");
+    logWithTimestamp("Connected to MQTT broker successfully");
 
     // Message processing callback
     $mqtt->registerLoopEventHandler(function (MqttClient $mqtt, float $elapsedTime) {
@@ -47,29 +53,29 @@ try {
         if ($elapsedTime - $lastPing >= 30) {
             $mqtt->ping();
             $lastPing = $elapsedTime;
-            error_log("MQTT ping sent");
+            logWithTimestamp("MQTT ping sent");
         }
     });
 
     // Subscribe to topics
-    error_log("Subscribing to MQTT topics");
+    logWithTimestamp("Subscribing to MQTT topics");
     $mqtt->subscribe('+/live', function ($topic, $message) {
-        error_log("Received live data on topic: " . $topic);
+        logWithTimestamp("Received live data on topic: " . $topic);
         processLiveData($topic, $message);
     }, 0);
 
     $mqtt->subscribe('+/data', function ($topic, $message) {
-        error_log("Received logged data on topic: " . $topic);
+        logWithTimestamp("Received logged data on topic: " . $topic);
         processLoggedData($topic, $message);
     }, 0);
 
-    error_log("Starting MQTT event loop");
+    logWithTimestamp("Starting MQTT event loop");
     // Start the event loop
     $mqtt->loop(true);
 
 } catch (Exception $e) {
-    error_log("MQTT Error: " . $e->getMessage());
-    error_log("Stack trace: " . $e->getTraceAsString());
+    logWithTimestamp("MQTT Error: " . $e->getMessage());
+    logWithTimestamp("Stack trace: " . $e->getTraceAsString());
     throw $e;
 }
 
@@ -79,13 +85,13 @@ try {
  */
 function processLiveData($topic, $message) {
     try {
-        error_log("Processing live data message: " . $message);
+        logWithTimestamp("Processing live data message: " . $message);
         $values = explode(',', $message);
         $device_id = array_pop($values); // Get and remove device_id from the end
 
         // Create WebSocket client
         $client = new Client("wss://live.onlineiotdata.in:8081");
-        error_log("WebSocket client created");
+        logWithTimestamp("WebSocket client created");
         
         // Send data to WebSocket server
         $data = [
@@ -94,16 +100,16 @@ function processLiveData($topic, $message) {
         ];
         
         $client->send(json_encode($data));
-        error_log("Data sent to WebSocket server");
+        logWithTimestamp("Data sent to WebSocket server");
         $client->close();
         
         // Query modem_params table
         $query = "SELECT param_name, position, unit FROM modem_params WHERE device_id = '$device_id' ORDER BY position";
         $result = QueryManager::getMultipleRow($query);
-        error_log("Modem params queried for device: " . $device_id);
+        logWithTimestamp("Modem params queried for device: " . $device_id);
     } catch (Exception $e) {
-        error_log("Error processing live data: " . $e->getMessage());
-        error_log("Stack trace: " . $e->getTraceAsString());
+        logWithTimestamp("Error processing live data: " . $e->getMessage());
+        logWithTimestamp("Stack trace: " . $e->getTraceAsString());
     }
 }
 
@@ -113,7 +119,7 @@ function processLiveData($topic, $message) {
  */
 function processLoggedData($topic, $message) {
     try {
-        error_log("Processing logged data message: " . $message);
+        logWithTimestamp("Processing logged data message: " . $message);
         $values = explode(',', $message);
         $device_id = array_pop($values); // Get and remove device_id from the end
         $timestamp = array_shift($values); // Get and remove timestamp from the start
@@ -124,14 +130,14 @@ function processLoggedData($topic, $message) {
         
         // If device not found, ignore the message
         if (!$result || $result[0] == 0) {
-            error_log("Ignored MQTT message: Device ID '$device_id' not found in devices table");
+            logWithTimestamp("Ignored MQTT message: Device ID '$device_id' not found in devices table");
             return;
         }
         
         // Parse timestamp for database date/time columns
         $date = DateTime::createFromFormat('dmyHi', $timestamp);
         if (!$date) {
-            error_log("Invalid timestamp format in MQTT message for device '$device_id'");
+            logWithTimestamp("Invalid timestamp format in MQTT message for device '$device_id'");
             return;
         }
         
@@ -147,7 +153,7 @@ function processLoggedData($topic, $message) {
 
         // If no valid recharge period found, ignore the message
         if (!$rechargeResult || $rechargeResult[0] == 0) {
-            error_log("Ignored MQTT message: No valid recharge period found for device '$device_id' on date '$formattedDate'");
+            logWithTimestamp("Ignored MQTT message: No valid recharge period found for device '$device_id' on date '$formattedDate'");
             return;
         }
         
@@ -159,9 +165,9 @@ function processLoggedData($topic, $message) {
                  VALUES ('$formattedDate', '$formattedTime', '$device_id', '$dataString')";
         
         QueryManager::executeQuerySqli($query);
-        error_log("Logged data stored for device: " . $device_id);
+        logWithTimestamp("Logged data stored for device: " . $device_id);
     } catch (Exception $e) {
-        error_log("Error processing logged data: " . $e->getMessage());
-        error_log("Stack trace: " . $e->getTraceAsString());
+        logWithTimestamp("Error processing logged data: " . $e->getMessage());
+        logWithTimestamp("Stack trace: " . $e->getTraceAsString());
     }
 }

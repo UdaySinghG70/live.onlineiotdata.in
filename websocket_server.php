@@ -11,21 +11,27 @@ use React\EventLoop\Factory;
 use React\Socket\SecureServer;
 use React\Socket\Server;
 
+// Custom logging function with timestamp
+function logWithTimestamp($message) {
+    $timestamp = date('Y-m-d H:i:s');
+    error_log("[$timestamp] $message");
+}
+
 class LiveDataServer implements \Ratchet\MessageComponentInterface {
     protected $clients;
     
     public function __construct() {
         $this->clients = new \SplObjectStorage;
-        error_log("WebSocket server initialized");
+        logWithTimestamp("WebSocket server initialized");
     }
 
     public function onOpen(\Ratchet\ConnectionInterface $conn) {
         $this->clients->attach($conn);
-        error_log("New connection established: " . $conn->remoteAddress);
+        logWithTimestamp("New connection established: " . $conn->remoteAddress);
     }
 
     public function onMessage(\Ratchet\ConnectionInterface $from, $msg) {
-        error_log("Received message: " . $msg);
+        logWithTimestamp("Received message: " . $msg);
         // Broadcast message to all connected clients
         foreach ($this->clients as $client) {
             $client->send($msg);
@@ -34,11 +40,11 @@ class LiveDataServer implements \Ratchet\MessageComponentInterface {
 
     public function onClose(\Ratchet\ConnectionInterface $conn) {
         $this->clients->detach($conn);
-        error_log("Connection closed: " . $conn->remoteAddress);
+        logWithTimestamp("Connection closed: " . $conn->remoteAddress);
     }
 
     public function onError(\Ratchet\ConnectionInterface $conn, \Exception $e) {
-        error_log("Error occurred: " . $e->getMessage());
+        logWithTimestamp("Error: " . $e->getMessage());
         $conn->close();
     }
 
@@ -50,17 +56,17 @@ class LiveDataServer implements \Ratchet\MessageComponentInterface {
 }
 
 try {
-    error_log("Starting WebSocket server...");
-    error_log("PHP version: " . PHP_VERSION);
-    error_log("Current working directory: " . getcwd());
+    logWithTimestamp("Starting WebSocket server...");
+    logWithTimestamp("PHP version: " . PHP_VERSION);
+    logWithTimestamp("Current working directory: " . getcwd());
     
     // Check SSL certificates
     $certPath = '/etc/letsencrypt/live/live.onlineiotdata.in/fullchain.pem';
     $keyPath = '/etc/letsencrypt/live/live.onlineiotdata.in/privkey.pem';
     
-    error_log("Checking SSL certificates...");
-    error_log("Certificate path: " . $certPath);
-    error_log("Key path: " . $keyPath);
+    logWithTimestamp("Checking SSL certificates...");
+    logWithTimestamp("Certificate path: " . $certPath);
+    logWithTimestamp("Key path: " . $keyPath);
     
     if (!file_exists($certPath)) {
         throw new Exception("SSL certificate not found at: " . $certPath);
@@ -75,15 +81,15 @@ try {
         throw new Exception("SSL key not readable at: " . $keyPath);
     }
     
-    error_log("SSL certificates verified");
+    logWithTimestamp("SSL certificates verified");
     
     // Create event loop
     $loop = Factory::create();
-    error_log("Event loop created");
+    logWithTimestamp("Event loop created");
 
     // Create WebSocket server
     $webSocket = new Server('0.0.0.0:8081', $loop);
-    error_log("WebSocket server created on 0.0.0.0:8081");
+    logWithTimestamp("WebSocket server created on 0.0.0.0:8081");
 
     // Create secure WebSocket server
     $secureWebSocket = new SecureServer($webSocket, $loop, [
@@ -92,7 +98,7 @@ try {
         'verify_peer' => false,
         'allow_self_signed' => true
     ]);
-    error_log("Secure WebSocket server created");
+    logWithTimestamp("Secure WebSocket server created");
 
     // Create the WebSocket application
     $app = new HttpServer(
@@ -103,11 +109,11 @@ try {
 
     // Create the server
     $server = new IoServer($app, $secureWebSocket, $loop);
-    error_log("Ratchet server created and running");
+    logWithTimestamp("Ratchet server created and running");
 
     $server->run();
 } catch (\Exception $e) {
-    error_log("Fatal error: " . $e->getMessage());
-    error_log("Stack trace: " . $e->getTraceAsString());
+    logWithTimestamp("Fatal error: " . $e->getMessage());
+    logWithTimestamp("Stack trace: " . $e->getTraceAsString());
     throw $e;
 } 
