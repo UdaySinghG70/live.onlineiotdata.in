@@ -28,8 +28,23 @@ function logError($message, $error = null) {
     if ($error) {
         $logMessage .= " Error: " . $error->getMessage();
     }
-    error_log($logMessage . "\n", 3, "logs/mqtt.log");
+    $logMessage .= "\n";
+    
+    // Ensure logs directory exists and is writable
+    if (!file_exists('logs')) {
+        mkdir('logs', 0777, true);
+    }
+    
+    // Try to write to log file
+    $logFile = 'logs/mqtt.log';
+    if (file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX) === false) {
+        // If we can't write to the log file, try to write to system error log
+        error_log("Failed to write to MQTT log file: $logMessage");
+    }
 }
+
+// Add initial connection log
+logError("MQTT Client starting up...");
 
 function connectToMqtt() {
     global $mqtt, $reconnectAttempts, $lastReconnectTime, $isConnected;
@@ -37,6 +52,7 @@ function connectToMqtt() {
     try {
         // Create MQTT client instance
         $mqtt = new MqttClient(MQTT_HOST, MQTT_PORT, $clientId);
+        logError("MQTT Client instance created");
         
         // Set connection settings
         $connectionSettings = (new ConnectionSettings)

@@ -8,13 +8,26 @@ const MAX_LOG_FILES = 5; // Keep last 5 rotated log files
 function logWatchdog($message) {
     $timestamp = date('Y-m-d H:i:s');
     $logMessage = "[$timestamp] Watchdog: $message\n";
-    error_log($logMessage, 3, 'logs/watchdog.log');
+    
+    // Ensure logs directory exists and is writable
+    if (!file_exists('logs')) {
+        mkdir('logs', 0777, true);
+    }
+    
+    // Try to write to log file
+    $logFile = 'logs/watchdog.log';
+    if (file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX) === false) {
+        // If we can't write to the log file, try to write to system error log
+        error_log("Failed to write to watchdog log file: $logMessage");
+    }
 }
 
 function isMqttProcessRunning() {
     $cmd = "ps aux | grep '[p]hp.*mqtt_client.php'";
     exec($cmd, $output);
-    return !empty($output);
+    $isRunning = !empty($output);
+    logWatchdog("MQTT process check: " . ($isRunning ? "Running" : "Not running"));
+    return $isRunning;
 }
 
 function startMqttClient() {
@@ -81,6 +94,8 @@ while (true) {
         if (!isMqttProcessRunning()) {
             logWatchdog("MQTT client process not found. Restarting...");
             startMqttClient();
+        } else {
+            logWatchdog("MQTT client process is running normally");
         }
 
         // Rotate log file if needed
