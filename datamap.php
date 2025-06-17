@@ -27,7 +27,6 @@ $department_name = $userObj ? $userObj->department_name : '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Availability</title>
-    <link rel="icon" type="image/png" href="images/icons/favicon.png"/>
     <link rel="stylesheet" type="text/css" href="css/util.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="css/common.css">
@@ -720,6 +719,13 @@ $department_name = $userObj ? $userObj->department_name : '';
                         <span class="summary-value" id="avgEntries">-</span>
                     </div>
                 </div>
+                <div class="summary-item">
+                    <div class="summary-icon">📆</div>
+                    <div class="summary-text">
+                        <span class="summary-label">Today's Data</span>
+                        <span class="summary-value" id="todayDataPoints">-</span>
+                    </div>
+                </div>
             </div>
             <div class="Data-graph">
                 <div class="graph-container">
@@ -952,11 +958,20 @@ $department_name = $userObj ? $userObj->department_name : '';
                 // Calculate summary statistics
                 let totalEntries = 0;
                 let activeDaysCount = 0;
+                let todayEntries = 0;
+
+                // Get today's date in YYYY-MM-DD format
+                const today = new Date();
+                const todayStr = today.toISOString().split('T')[0];
 
                 Object.entries(data).forEach(([date, count]) => {
                     totalEntries += count;
                     if (count > 0) {
                         activeDaysCount++;
+                    }
+                    // Check if this is today's data
+                    if (date === todayStr) {
+                        todayEntries = count;
                     }
                 });
 
@@ -966,6 +981,7 @@ $department_name = $userObj ? $userObj->department_name : '';
                 $('#totalDataPoints').text(totalEntries.toLocaleString());
                 $('#activeDays').text(activeDaysCount);
                 $('#avgEntries').text(avgEntriesPerDay.toLocaleString());
+                $('#todayDataPoints').text(todayEntries.toLocaleString());
 
                 // Update squares with simple tooltip
                 $('.square:not(.empty)').each(function() {
