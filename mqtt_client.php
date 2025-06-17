@@ -21,6 +21,9 @@ const MQTT_PASSWORD = 'BeagleBone99';
 // Generate a random client ID
 $clientId = 'php_mqtt_client_' . rand(1, 10000);
 
+// Add this at the top of the file after the requires
+$processedMessages = [];
+
 try {
     logWithTimestamp("Starting MQTT client...");
     logWithTimestamp("PHP version: " . PHP_VERSION);
@@ -84,8 +87,18 @@ try {
  * Format: value1,value2,value3,...,valuen,device_id
  */
 function processLiveData($topic, $message) {
+    global $processedMessages;
     try {
         logWithTimestamp("Processing live data message: " . $message);
+        
+        // Check if this message has already been processed
+        $messageHash = md5($message);
+        if (isset($processedMessages[$messageHash])) {
+            logWithTimestamp("Skipping duplicate live data message");
+            return;
+        }
+        $processedMessages[$messageHash] = true;
+        
         $values = explode(',', $message);
         $device_id = array_pop($values); // Get and remove device_id from the end
 
@@ -118,8 +131,18 @@ function processLiveData($topic, $message) {
  * Format: DDMMYYHHMM,value1,value2,...,valuen,device_id
  */
 function processLoggedData($topic, $message) {
+    global $processedMessages;
     try {
         logWithTimestamp("Processing logged data message: " . $message);
+        
+        // Check if this message has already been processed
+        $messageHash = md5($message);
+        if (isset($processedMessages[$messageHash])) {
+            logWithTimestamp("Skipping duplicate logged data message");
+            return;
+        }
+        $processedMessages[$messageHash] = true;
+        
         $values = explode(',', $message);
         $device_id = array_pop($values); // Get and remove device_id from the end
         $timestamp = array_shift($values); // Get and remove timestamp from the start
