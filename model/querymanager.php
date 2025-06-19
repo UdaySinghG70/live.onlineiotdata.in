@@ -37,7 +37,16 @@ class QueryManager{
   		if($result){
   			return true;
   		}else{
-		echo $con->error;
+            // Auto-reconnect on server gone away
+            if (in_array($con->errno, [2006, 2013])) {
+                self::$connection = null;
+                $con = self::getSqlConnection();
+                $result = $con->query($qry);
+                if ($result) {
+                    return true;
+                }
+            }
+            echo $con->error;
   			return false;
   		}
   		
@@ -48,7 +57,15 @@ class QueryManager{
   		$con = self::getSqlConnection();
   		$result = $con->query($qry);
   		if (!$result) {
-  			echo $con->error;
+            // Auto-reconnect on server gone away
+            if (in_array($con->errno, [2006, 2013])) {
+                self::$connection = null;
+                $con = self::getSqlConnection();
+                $result = $con->query($qry);
+            }
+            if (!$result) {
+                echo $con->error;
+            }
   		}
   		return $result;
   			
@@ -58,6 +75,11 @@ class QueryManager{
   	{
   		$con = self::getSqlConnection();
   		$result = mysqli_query($con,$qry);
+  		if (!$result && in_array(mysqli_errno($con), [2006, 2013])) {
+            self::$connection = null;
+            $con = self::getSqlConnection();
+            $result = mysqli_query($con,$qry);
+        }
   		if ($result)
   		{
   			$row=mysqli_fetch_row($result);
