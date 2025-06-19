@@ -37,16 +37,16 @@ class QueryManager{
   		if($result){
   			return true;
   		}else{
-            // Auto-reconnect on server gone away
-            if (in_array($con->errno, [2006, 2013])) {
-                self::$connection = null;
-                $con = self::getSqlConnection();
-                $result = $con->query($qry);
-                if ($result) {
-                    return true;
-                }
-            }
-            echo $con->error;
+  			// Retry once if server has gone away
+  			if (strpos($con->error, 'server has gone away') !== false || strpos($con->error, 'Lost connection to MySQL server') !== false) {
+  				self::$connection = null; // Force reconnect
+  				$con = self::getSqlConnection();
+  				$result = $con->query($qry);
+  				if($result){
+  					return true;
+  				}
+  			}
+  			echo $con->error;
   			return false;
   		}
   		
@@ -57,15 +57,15 @@ class QueryManager{
   		$con = self::getSqlConnection();
   		$result = $con->query($qry);
   		if (!$result) {
-            // Auto-reconnect on server gone away
-            if (in_array($con->errno, [2006, 2013])) {
-                self::$connection = null;
-                $con = self::getSqlConnection();
-                $result = $con->query($qry);
-            }
-            if (!$result) {
-                echo $con->error;
-            }
+  			// Retry once if server has gone away
+  			if (strpos($con->error, 'server has gone away') !== false || strpos($con->error, 'Lost connection to MySQL server') !== false) {
+  				self::$connection = null;
+  				$con = self::getSqlConnection();
+  				$result = $con->query($qry);
+  			}
+  			if (!$result) {
+  				echo $con->error;
+  			}
   		}
   		return $result;
   			
@@ -75,17 +75,23 @@ class QueryManager{
   	{
   		$con = self::getSqlConnection();
   		$result = mysqli_query($con,$qry);
-  		if (!$result && in_array(mysqli_errno($con), [2006, 2013])) {
-            self::$connection = null;
-            $con = self::getSqlConnection();
-            $result = mysqli_query($con,$qry);
-        }
   		if ($result)
   		{
   			$row=mysqli_fetch_row($result);
   			mysqli_free_result($result);
   			return $row;
   		}else{
+  			// Retry once if server has gone away
+  			if (strpos(mysqli_error($con), 'server has gone away') !== false || strpos(mysqli_error($con), 'Lost connection to MySQL server') !== false) {
+  				self::$connection = null;
+  				$con = self::getSqlConnection();
+  				$result = mysqli_query($con,$qry);
+  				if ($result) {
+  					$row=mysqli_fetch_row($result);
+  					mysqli_free_result($result);
+  					return $row;
+  				}
+  			}
   			return null;
   		}
   			
