@@ -294,27 +294,29 @@ function createDevice(){
 					device_id: $("input[name='device_id']").val()
 				};
 				
-				// Add database parameters to the data
-				var index = 0;
+				// Collect all database parameter rows (manual and preset)
+				var paramNames = [];
+				var paramTypes = [];
+				var paramUnits = [];
+				var paramPositions = [];
 				$(".params_tbody_db tr").each(function() {
 					var row = $(this);
-					var paramName = row.find("input[name^='param_name_db']").val();
-					var paramType = row.find("select[name^='param_type_db']").val();
-					var paramUnit = row.find("input[name^='unit_db']").val();
-					var paramPosition = row.find("input[name^='position_db']").val();
-					
-					// Only add if we have valid data
+					var paramName = row.find(".param_name_db").val();
+					var paramType = row.find(".param_type_db").val();
+					var paramUnit = row.find(".unit_db").val();
+					var paramPosition = row.find(".position_db").val();
 					if (paramName && paramType) {
-						dbParams['paramName_db[' + index + ']'] = paramName;
-						dbParams['paramType_db[' + index + ']'] = paramType;
-						dbParams['paramUnit_db[' + index + ']'] = paramUnit;
-						dbParams['paramPosition_db[' + index + ']'] = paramPosition;
-						index++;
+						paramNames.push(paramName);
+						paramTypes.push(paramType);
+						paramUnits.push(paramUnit);
+						paramPositions.push(paramPosition);
 					}
 				});
-				
-				// Update the count to reflect actual number of parameters
-				dbParams.count = index;
+				dbParams['paramName_db'] = paramNames;
+				dbParams['paramType_db'] = paramTypes;
+				dbParams['paramUnit_db'] = paramUnits;
+				dbParams['paramPosition_db'] = paramPositions;
+				dbParams.count = paramNames.length;
 				
 				console.log("Sending database parameters:", dbParams);
 				

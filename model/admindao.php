@@ -770,4 +770,18 @@ class AdminDao{
         $result = QueryManager::executeQuerySqli($qry);
         return $result ? true : false;
     }
+
+    // Get unique preset names from the preset table
+    function getUniquePresetNames() {
+        include_once "querymanager.php";
+        $qry = "SELECT DISTINCT preset_name FROM preset ORDER BY preset_name ASC";
+        $rows = QueryManager::getMultipleRow($qry);
+        $names = array();
+        if ($rows && mysqli_num_rows($rows) > 0) {
+            while ($row = mysqli_fetch_row($rows)) {
+                $names[] = $row[0];
+            }
+        }
+        return $names;
+    }
 }
