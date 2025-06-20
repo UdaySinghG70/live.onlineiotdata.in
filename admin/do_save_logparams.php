@@ -1,13 +1,7 @@
 <?php
 session_start();
-if(!isset($_SESSION['user_name'])){
-    // If AJAX request, return JSON error
-    if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-        header('Content-Type: application/json');
-        echo json_encode(['error' => 'unauthorized', 'login_url' => '../index.php']);
-    } else {
-        header("Location: ../index.php");
-    }
+if(!isset($_SESSION['admin_name'])){
+    header("Location: ../index.php");
     exit;
 }
 include_once '../model/admindao.php';

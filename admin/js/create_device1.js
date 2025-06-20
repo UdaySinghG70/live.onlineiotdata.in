@@ -213,31 +213,32 @@ function updateDevice(){
 			if(result.indexOf("Updated") >= 0 || result.indexOf("updated") >= 0) {
 				// If device update was successful, save the database parameters
 				var dbParams = {
-					device_id: $("input[name='device_id']").val(),
-					count: $("input[name='count_db']").val()
+					device_id: $("input[name='device_id']").val()
 				};
 				
 				// Add database parameters to the data
-				var index = 0;
+				var paramNames = [];
+				var paramTypes = [];
+				var paramUnits = [];
+				var paramPositions = [];
 				$(".params_tbody_db tr").each(function() {
 					var row = $(this);
-					var paramName = row.find("input[name^='param_name_db']").val();
-					var paramType = row.find("select[name^='param_type_db']").val();
-					var paramUnit = row.find("input[name^='unit_db']").val();
-					var paramPosition = row.find("input[name^='position_db']").val();
-					
-					// Only add if we have valid data
+					var paramName = row.find(".param_name_db").val();
+					var paramType = row.find(".param_type_db").val();
+					var paramUnit = row.find(".unit_db").val();
+					var paramPosition = row.find(".position_db").val();
 					if (paramName && paramType) {
-						dbParams['paramName_db[' + index + ']'] = paramName;
-						dbParams['paramType_db[' + index + ']'] = paramType;
-						dbParams['paramUnit_db[' + index + ']'] = paramUnit;
-						dbParams['paramPosition_db[' + index + ']'] = paramPosition;
-						index++;
+						paramNames.push(paramName);
+						paramTypes.push(paramType);
+						paramUnits.push(paramUnit);
+						paramPositions.push(paramPosition);
 					}
 				});
-				
-				// Update the count to reflect actual number of parameters
-				dbParams.count = index;
+				dbParams['paramName_db[]'] = paramNames;
+				dbParams['paramType_db[]'] = paramTypes;
+				dbParams['paramUnit_db[]'] = paramUnits;
+				dbParams['paramPosition_db[]'] = paramPositions;
+				dbParams.count = paramNames.length;
 				
 				console.log("Sending database parameters:", dbParams);
 				
@@ -246,16 +247,6 @@ function updateDevice(){
 					type: 'POST',
 					data: dbParams,
 					success: function(paramResult){
-						// Try to handle JSON error for unauthorized
-						try {
-							var parsed = (typeof paramResult === 'string') ? JSON.parse(paramResult) : paramResult;
-							if (parsed && parsed.error === 'unauthorized') {
-								window.location.href = parsed.login_url || '../index.php';
-								return;
-							}
-						} catch (e) {
-							// Not JSON, continue as normal
-						}
 						console.log("Parameter save response:", paramResult);
 						$(".msg_task").html(result + " " + paramResult);
 						$(".loading_file").css("display","none");
@@ -322,10 +313,10 @@ function createDevice(){
 						paramPositions.push(paramPosition);
 					}
 				});
-				dbParams['paramName_db'] = paramNames;
-				dbParams['paramType_db'] = paramTypes;
-				dbParams['paramUnit_db'] = paramUnits;
-				dbParams['paramPosition_db'] = paramPositions;
+				dbParams['paramName_db[]'] = paramNames;
+				dbParams['paramType_db[]'] = paramTypes;
+				dbParams['paramUnit_db[]'] = paramUnits;
+				dbParams['paramPosition_db[]'] = paramPositions;
 				dbParams.count = paramNames.length;
 				
 				console.log("Sending database parameters:", dbParams);
@@ -335,16 +326,6 @@ function createDevice(){
 					type: 'POST',
 					data: dbParams,
 					success: function(paramResult){
-						// Try to handle JSON error for unauthorized
-						try {
-							var parsed = (typeof paramResult === 'string') ? JSON.parse(paramResult) : paramResult;
-							if (parsed && parsed.error === 'unauthorized') {
-								window.location.href = parsed.login_url || '../index.php';
-								return;
-							}
-						} catch (e) {
-							// Not JSON, continue as normal
-						}
 						console.log("Parameter save response:", paramResult);
 						$(".msg_task").html(result + " " + paramResult);
 						$(".loading_file").css("display","none");
