@@ -762,4 +762,12 @@ class AdminDao{
         }
         return null;
     }
+
+    // Add a preset parameter row to the preset table
+    function addPresetParam($preset_name, $param_name, $param_type, $param_unit) {
+        include_once "querymanager.php";
+        $qry = "INSERT INTO preset (preset_name, param_name, param_type, param_unit) VALUES ('" . addslashes($preset_name) . "', '" . addslashes($param_name) . "', '" . addslashes($param_type) . "', '" . addslashes($param_unit) . "')";
+        $result = QueryManager::executeQuerySqli($qry);
+        return $result ? true : false;
+    }
 }
