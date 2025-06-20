@@ -490,6 +490,32 @@ if($adminDetails==null){
                 gap: 0.7rem;
             }
         }
+        .remove-param {
+            background: #fff0f0;
+            border: 1.5px solid #ffd6d6;
+            color: #e03131;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            padding: 0.4rem 0.9rem;
+            margin-left: 0.2rem;
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            min-height: 36px;
+            box-sizing: border-box;
+        }
+        .remove-param .material-icons {
+            font-size: 22px;
+            vertical-align: middle;
+            line-height: 1;
+        }
+        .remove-param:hover {
+            background: #ffe3e3;
+            color: #b91c1c;
+            border-color: #e03131;
+        }
     </style>
 </head>
 <body>
@@ -590,7 +616,7 @@ if($adminDetails==null){
                                     <label>Unit</label>
                                     <input type="text" name="paramUnit[]" class="param-unit-input" placeholder="e.g., °C">
                                 </div>
-                                <button type="button" class="btn btn-danger enhanced-remove-btn remove-param" title="Remove Parameter" style="margin-top: 1.5rem;">✖</button>
+                                <button type="button" class="btn btn-danger remove-param" title="Remove Parameter" style="margin-top: 1.5rem;"><span class="material-icons">delete</span></button>
                             </div>
                         </div>
                     </div>
@@ -785,7 +811,7 @@ if($adminDetails==null){
                     <label>Unit</label>
                     <input type="text" name="paramUnit[]" class="param-unit-input" placeholder="e.g., °C">
                 </div>
-                <button type="button" class="btn btn-danger remove-param" style="margin-top: 1.5rem;">Remove</button>
+                <button type="button" class="btn btn-danger remove-param" style="margin-top: 1.5rem;"><span class="material-icons">delete</span></button>
             `;
             parametersList.appendChild(newRow);
             attachTypeUnitListeners();
@@ -796,7 +822,7 @@ if($adminDetails==null){
 
         // Remove parameter row (delegate event)
         parametersList.addEventListener('click', function(e) {
-            if (e.target.classList.contains('remove-param')) {
+            if (e.target.closest('.remove-param')) {
                 const rows = parametersList.querySelectorAll('.parameter-row');
                 if (rows.length > 1) {
                     e.target.closest('.parameter-row').remove();
@@ -853,7 +879,7 @@ if($adminDetails==null){
                                     <label>Unit</label>
                                     <input type="text" name="paramUnit[]" class="param-unit-input" placeholder="e.g., °C">
                                 </div>
-                                <button type="button" class="btn btn-danger remove-param" style="margin-top: 1.5rem;">Remove</button>
+                                <button type="button" class="btn btn-danger remove-param" style="margin-top: 1.5rem;"><span class="material-icons">delete</span></button>
                             </div>
                         `;
                     } else {
