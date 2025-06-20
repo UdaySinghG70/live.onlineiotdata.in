@@ -246,6 +246,16 @@ function updateDevice(){
 					type: 'POST',
 					data: dbParams,
 					success: function(paramResult){
+						// Try to handle JSON error for unauthorized
+						try {
+							var parsed = (typeof paramResult === 'string') ? JSON.parse(paramResult) : paramResult;
+							if (parsed && parsed.error === 'unauthorized') {
+								window.location.href = parsed.login_url || '../index.php';
+								return;
+							}
+						} catch (e) {
+							// Not JSON, continue as normal
+						}
 						console.log("Parameter save response:", paramResult);
 						$(".msg_task").html(result + " " + paramResult);
 						$(".loading_file").css("display","none");
@@ -325,6 +335,16 @@ function createDevice(){
 					type: 'POST',
 					data: dbParams,
 					success: function(paramResult){
+						// Try to handle JSON error for unauthorized
+						try {
+							var parsed = (typeof paramResult === 'string') ? JSON.parse(paramResult) : paramResult;
+							if (parsed && parsed.error === 'unauthorized') {
+								window.location.href = parsed.login_url || '../index.php';
+								return;
+							}
+						} catch (e) {
+							// Not JSON, continue as normal
+						}
 						console.log("Parameter save response:", paramResult);
 						$(".msg_task").html(result + " " + paramResult);
 						$(".loading_file").css("display","none");
