@@ -49,11 +49,12 @@ if($adminDetails==null){
             border-radius: 12px;
             padding: 1.5rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .stats-card:hover {
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .stats-header {
@@ -72,6 +73,7 @@ if($adminDetails==null){
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .stats-title {
@@ -270,11 +272,86 @@ if($adminDetails==null){
         /* Make stats cards clickable */
         .stats-card.clickable {
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
 
         .stats-card.clickable:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .stats-card.clickable::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #0067ac, #0088e0);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stats-card.clickable:hover::before {
+            opacity: 1;
+        }
+
+        /* Special styling for preset parameters card */
+        .stats-card.clickable .stats-header {
+            margin-bottom: 0.75rem;
+        }
+
+        .stats-card.clickable .stats-icon {
+            background: linear-gradient(135deg, #0067ac, #0088e0);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 102, 172, 0.3);
+        }
+
+        .stats-card.clickable .stats-title {
+            color: #0067ac;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .stats-card.clickable .stats-value {
+            color: #0067ac;
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stats-card.clickable .stats-value::after {
+            content: '→';
+            font-size: 1.2rem;
+            opacity: 0.7;
+            transition: transform 0.2s ease;
+        }
+
+        .stats-card.clickable:hover .stats-value::after {
+            transform: translateX(3px);
+        }
+
+        /* Add a subtle background pattern */
+        .stats-card.clickable {
+            background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+            border: 1px solid #e3f2fd;
+        }
+
+        .stats-card.clickable:hover {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+            border-color: #0067ac;
+        }
+
+        /* Enhanced Responsive Styles */
+        @media (max-width: 1200px) {
+            .dashboard-grid,
+            .dashboard-grid-2 {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.25rem;
+            }
         }
 
         @media (max-width: 768px) {
@@ -285,16 +362,51 @@ if($adminDetails==null){
             }
 
             .stats-card {
-                padding: 1rem;
+                padding: 1.25rem;
+            }
+
+            .stats-header {
+                gap: 0.5rem;
+            }
+
+            .stats-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .stats-title {
+                font-size: 0.8rem;
+            }
+
+            .stats-value {
+                font-size: 1.25rem;
+            }
+
+            /* Responsive styles for clickable card */
+            .stats-card.clickable .stats-value {
+                font-size: 1rem;
+            }
+
+            .stats-card.clickable .stats-value::after {
+                font-size: 1.1rem;
             }
 
             .welcome-message {
                 padding: 1.5rem;
             }
 
+            .welcome-message h2 {
+                font-size: 1.25rem;
+            }
+
+            .welcome-message p {
+                font-size: 0.9rem;
+            }
+
             .modal-content {
                 width: 95%;
                 margin: 10% auto;
+                max-height: 85vh;
             }
 
             .modal-body {
@@ -303,15 +415,155 @@ if($adminDetails==null){
 
             .form-actions {
                 flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .form-actions .btn {
+                width: 100%;
+                text-align: center;
             }
 
             .parameter-row {
                 grid-template-columns: 1fr;
                 gap: 0.75rem;
+                padding: 0.75rem;
             }
 
             .parameter-row .btn-danger {
                 margin-top: 0.5rem !important;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-grid,
+            .dashboard-grid-2 {
+                gap: 0.75rem;
+            }
+
+            .stats-card {
+                padding: 1rem;
+            }
+
+            .stats-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .stats-icon {
+                width: 32px;
+                height: 32px;
+            }
+
+            .stats-title {
+                font-size: 0.75rem;
+            }
+
+            .stats-value {
+                font-size: 1.1rem;
+            }
+
+            /* Responsive styles for clickable card */
+            .stats-card.clickable .stats-header {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .stats-card.clickable .stats-value {
+                font-size: 0.95rem;
+            }
+
+            .stats-card.clickable .stats-value::after {
+                font-size: 1rem;
+            }
+
+            .welcome-message {
+                padding: 1rem;
+            }
+
+            .welcome-message h2 {
+                font-size: 1.1rem;
+            }
+
+            .welcome-message p {
+                font-size: 0.85rem;
+            }
+
+            .modal-content {
+                width: 98%;
+                margin: 5% auto;
+                max-height: 90vh;
+            }
+
+            .modal-header {
+                padding: 1rem;
+            }
+
+            .modal-header h2 {
+                font-size: 1.25rem;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+
+            .parameters-section {
+                padding: 1rem;
+            }
+
+            .parameter-row {
+                padding: 0.5rem;
+                gap: 0.5rem;
+            }
+
+            .form-group input,
+            .form-group select {
+                padding: 0.6rem;
+                font-size: 0.8rem;
+            }
+
+            .form-group label {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .stats-card {
+                padding: 0.75rem;
+            }
+
+            .stats-value {
+                font-size: 1rem;
+            }
+
+            /* Responsive styles for clickable card */
+            .stats-card.clickable .stats-value {
+                font-size: 0.9rem;
+            }
+
+            .stats-card.clickable .stats-value::after {
+                font-size: 0.9rem;
+            }
+
+            .welcome-message {
+                padding: 0.75rem;
+            }
+
+            .welcome-message h2 {
+                font-size: 1rem;
+            }
+
+            .modal-content {
+                width: 100%;
+                margin: 0;
+                border-radius: 0;
+                max-height: 100vh;
+            }
+
+            .modal-header {
+                border-radius: 0;
             }
         }
 
@@ -470,15 +722,21 @@ if($adminDetails==null){
             border: 1.5px solid #0067ac;
             background: #e3f6ff;
         }
+        
+        /* Enhanced Modal Responsive Styles */
         @media (max-width: 768px) {
             .enhanced-modal {
                 width: 98vw !important;
                 min-width: 0;
+                margin: 5% auto;
             }
             .enhanced-modal-header,
             .enhanced-preset-form {
                 padding-left: 1rem;
                 padding-right: 1rem;
+            }
+            .enhanced-modal-header h2 {
+                font-size: 1.2rem;
             }
             .enhanced-parameter-row {
                 grid-template-columns: 1fr;
@@ -489,7 +747,48 @@ if($adminDetails==null){
                 flex-direction: column;
                 gap: 0.7rem;
             }
+            .enhanced-form-actions .btn {
+                width: 100%;
+                min-width: auto;
+            }
+            .parameters-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            .enhanced-add-btn {
+                align-self: flex-start;
+            }
         }
+        
+        @media (max-width: 480px) {
+            .enhanced-modal {
+                width: 100vw !important;
+                margin: 0;
+                border-radius: 0;
+                max-height: 100vh;
+            }
+            .enhanced-modal-header {
+                border-radius: 0;
+                padding: 1rem;
+            }
+            .enhanced-preset-form {
+                padding: 1rem;
+            }
+            .enhanced-parameters-section {
+                padding: 0.75rem;
+            }
+            .enhanced-parameter-row {
+                padding: 0.5rem;
+                gap: 0.5rem;
+            }
+            .enhanced-parameter-row .form-group input,
+            .enhanced-parameter-row .form-group select {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+        }
+        
         .remove-param {
             background: #fff0f0;
             border: 1.5px solid #ffd6d6;

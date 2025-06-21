@@ -7,8 +7,11 @@
                 <h1>Cloud Monitoring System</h1>
                 <div class="admin-badge">Admin Panel</div>
             </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <span class="material-icons">menu</span>
+            </button>
         </div>
-        <nav class="admin-nav">
+        <nav class="admin-nav" id="adminNav">
             <ul class="nav-list">
                 <li class="nav-item">
                     <a href="index.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">
@@ -72,3 +75,57 @@
 <div class="loader">
     <img src="../images/loader.gif" alt="Loading..." />
 </div>
+
+<script>
+// Mobile menu toggle functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const adminNav = document.getElementById('adminNav');
+    
+    if (mobileMenuToggle && adminNav) {
+        mobileMenuToggle.addEventListener('click', function() {
+            adminNav.classList.toggle('active');
+            
+            // Change icon based on menu state
+            const icon = this.querySelector('.material-icons');
+            if (adminNav.classList.contains('active')) {
+                icon.textContent = 'close';
+            } else {
+                icon.textContent = 'menu';
+            }
+        });
+        
+        // Close menu when clicking on a nav link (mobile)
+        const navLinks = adminNav.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    adminNav.classList.remove('active');
+                    const icon = mobileMenuToggle.querySelector('.material-icons');
+                    icon.textContent = 'menu';
+                }
+            });
+        });
+        
+        // Close menu when clicking outside (mobile)
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                if (!adminNav.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+                    adminNav.classList.remove('active');
+                    const icon = mobileMenuToggle.querySelector('.material-icons');
+                    icon.textContent = 'menu';
+                }
+            }
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                adminNav.classList.remove('active');
+                const icon = mobileMenuToggle.querySelector('.material-icons');
+                icon.textContent = 'menu';
+            }
+        });
+    }
+});
+</script>
