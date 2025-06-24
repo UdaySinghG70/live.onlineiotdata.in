@@ -42,82 +42,111 @@ $stmt->close();
         }
         .popup-card-better {
             background: #fff;
-            border-radius: 16px;
+            border-radius: 14px;
             box-shadow: 0 4px 24px rgba(0,0,0,0.13);
-            max-width: 340px;
-            min-width: 200px;
+            max-width: 370px;
+            min-width: 220px;
+            width: 96vw;
             margin: 0 auto;
             padding: 1.5rem 1.2rem 1.2rem 1.2rem;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: stretch;
             position: relative;
         }
-        .popup-icon {
-            color: #2196f3;
-            font-size: 2.2rem;
-            margin-bottom: 0.2rem;
+        .popup-title-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.7rem;
+        }
+        .popup-title-icon {
+            color: #0067ac;
+            font-size: 1.5rem;
         }
         .popup-title {
             font-size: 1.18rem;
             font-weight: 700;
-            color: #1565c0;
-            margin-bottom: 1.1rem;
+            color: #1e293b;
             letter-spacing: 0.01em;
-            text-align: center;
         }
-        .popup-row {
-            margin-bottom: 0.7rem;
-            font-size: 1.01rem;
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
+        .popup-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 0.5rem 0 1.1rem 0;
+            border: none;
         }
-        .label {
+        .popup-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0.5rem;
+        }
+        .popup-table td {
+            padding: 0.35rem 0.2rem;
+            font-size: 1rem;
+        }
+        .popup-label {
             color: #64748b;
             font-weight: 500;
-            min-width: 90px;
             text-align: right;
+            width: 40%;
+            padding-right: 0.5rem;
+            vertical-align: top;
         }
-        .value {
+        .popup-value {
             color: #1e293b;
             font-weight: 600;
+            text-align: left;
+            width: 60%;
             word-break: break-all;
         }
         .no-record {
             color: #dc2626;
-            margin-bottom: 0.5rem;
+            margin: 0.5rem 0 0.2rem 0;
+            text-align: center;
             font-weight: 500;
         }
         @media (max-width: 500px) {
             .popup-card-better {
-                max-width: 98vw;
                 min-width: 0;
                 padding: 1rem 0.3rem 0.7rem 0.3rem;
             }
             .popup-title {
                 font-size: 1.05rem;
             }
-            .popup-row {
+            .popup-table td {
                 font-size: 0.97rem;
-            }
-            .label {
-                min-width: 70px;
             }
         }
     </style>
 </head>
 <body>
     <div class="popup-card-better">
-        <span class="material-icons popup-icon">info</span>
-        <div class="popup-title">Device Recharge Info</div>
-        <div class="popup-row"><span class="label">Device ID:</span> <span class="value"><?php echo htmlspecialchars($device_id); ?></span></div>
-        <?php if ($found): ?>
-            <div class="popup-row"><span class="label">Start Date:</span> <span class="value"><?php echo htmlspecialchars($start_date); ?></span></div>
-            <div class="popup-row"><span class="label">End Date:</span> <span class="value"><?php echo htmlspecialchars($end_date); ?></span></div>
-        <?php else: ?>
-            <div class="no-record">No recharge record found for this device.</div>
-        <?php endif; ?>
+        <div class="popup-title-row">
+            <span class="material-icons popup-title-icon">bolt</span>
+            <span class="popup-title">Device Recharge Info</span>
+        </div>
+        <hr class="popup-divider"/>
+        <table class="popup-table">
+            <tr>
+                <td class="popup-label">Device ID:</td>
+                <td class="popup-value"><?php echo htmlspecialchars($device_id); ?></td>
+            </tr>
+            <?php if ($found): ?>
+                <tr>
+                    <td class="popup-label">Start Date:</td>
+                    <td class="popup-value"><?php echo htmlspecialchars($start_date); ?></td>
+                </tr>
+                <tr>
+                    <td class="popup-label">End Date:</td>
+                    <td class="popup-value"><?php echo htmlspecialchars($end_date); ?></td>
+                </tr>
+            <?php else: ?>
+                <tr>
+                    <td colspan="2" class="no-record">No recharge record found for this device.</td>
+                </tr>
+            <?php endif; ?>
+        </table>
     </div>
 </body>
 </html> 
