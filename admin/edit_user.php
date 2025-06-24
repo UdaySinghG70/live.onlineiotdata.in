@@ -130,17 +130,17 @@ input[type=text]:focus, textarea:focus {
 <body>
     <?php include_once 'admin_header.php';?>
     <main class="dashboard">
-        <h1 class="page-title">Edit User</h1>
-        <div class="form-card" style="max-width: 800px; margin: 0 auto;">
+        <div class="form-card" style="max-width: 800px; margin: 40px auto 0 auto;">
+            <h1 class="page-title">Edit User</h1>
             <?php 
             if($userDetails==null){
-                echo "<div class='msgdata' style='color:#dc2626;font-weight:bold;'>User not found.</div>";
+                echo "<div style='color:#dc2626;font-weight:bold;'>User not found.</div>";
                 return ;
             }
             ?>
             <form id="data_frm">
-                <input type="hidden" name="user_name_old" value="<?php echo $userDetails->user_name;?>">
                 <div class="form-row">
+                    <input type="hidden" name="user_name_old" value="<?php echo $userDetails->user_name;?>">
                     <label class="form-label">User Name</label>
                     <input type="text" value="<?php echo $userDetails->user_name;?>" class="form-control" name="user_name" />
                 </div>
@@ -154,7 +154,7 @@ input[type=text]:focus, textarea:focus {
                 </div>
                 <div class="form-row">
                     <label class="form-label">Email ID</label>
-                    <input type="email" name="email_id" class="form-control" placeholder="Email ID" value="<?php echo $userDetails->email_id;?>"/>
+                    <input type="text" name="email_id" class="form-control" placeholder="Email ID" value="<?php echo $userDetails->email_id;?>"/>
                 </div>
                 <div class="form-row">
                     <label class="form-label">Mobile No</label>
@@ -170,7 +170,7 @@ input[type=text]:focus, textarea:focus {
                 </div>
                 <div class="form-row">
                     <label class="form-label">Address</label>
-                    <textarea rows="4" name="address" class="form-control" placeholder="Enter full address"><?php echo $userDetails->address;?></textarea>
+                    <textarea rows="4" name="address" class="form-control"><?php echo $userDetails->address;?></textarea>
                 </div>
                 <div class="form-row">
                     <label class="form-label">Country</label>
@@ -179,7 +179,7 @@ input[type=text]:focus, textarea:focus {
                 <div class="form-row">
                     <div class="form-label"></div>
                     <div>
-                        <button type="button" name="update_user" class="btn">Update</button>
+                        <input type="button" name="update_user" value="Update" class="btn"/>
                         <span class="message msg_task"></span>
                         <span class="message extra_msg_task"></span>
                     </div>
@@ -187,15 +187,33 @@ input[type=text]:focus, textarea:focus {
             </form>
         </div>
     </main>
-    <script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
-    <script src="js/create_user.js"></script>
-    <script src="../js/jquery-ui.js"></script>
-    <script>
-        $(function() {
-            $("input[name='start_date']").datepicker({ dateFormat: 'yy-mm-dd' });
-            $("input[name='end_date']").datepicker({ dateFormat: 'yy-mm-dd' });
-            SelectElement("countryoptions", "<?php echo $userDetails->country;?>");
-        });
-    </script>
+
+<!--===============================================================================================-->
+	<script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
+	<script src="js/create_user.js"></script>
+	<script src="../js/jquery-ui.js"></script>
+	<script src="../js/jquery.fixedtable.js"></script>
+	
+	<script type="text/javascript">
+	function SelectElement(id, valueToSelect)
+	{    
+	    var element = document.getElementById(id);
+	    element.value = valueToSelect;
+	}
+	
+	$( function() {
+		$("input[name='start_date']").datepicker({
+			dateFormat: 'yy-mm-dd',
+		});
+	    //$( "#startdate" ).datepicker();
+		$("input[name='end_date']").datepicker({
+			dateFormat: 'yy-mm-dd',
+		});
+
+		SelectElement("countryoptions", "<?php echo $userDetails->country;?>");
+
+
+	});
+</script>
 </body>
 </html>
