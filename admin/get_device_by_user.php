@@ -256,18 +256,20 @@ if($deviceArr==null){
                             <span class='material-icons'>edit</span>
                             Edit
                         </a>
-                        <a href='get_recharge_history.php?device_id=".htmlspecialchars($deviceArr[$i]->device_id)."&keepThis=true&TB_iframe=true&height=250&width=100' 
-                           title='Device Recharge History' 
-                           class='thickbox action-btn recharge' 
-                           id='rh".htmlspecialchars($deviceArr[$i]->id)."'>
-                            <span class='material-icons'>history</span>
+                        <button type='button' class='action-btn recharge-btn' data-device='".htmlspecialchars($deviceArr[$i]->device_id)."'>
+                            <span class='material-icons'>bolt</span>
                             Recharge
-                        </a>
+                        </button>
                     </div>
                 </td>";
                 ?>
                 <script>
-                    $("#rh<?php echo $deviceArr[$i]->id; ?>").attr("href", "get_recharge_history.php?device_id=<?php echo $deviceArr[$i]->device_id;?>&c_height="+deviceHeight+"&c_width="+deviceWidth+"&keepThis=true&TB_iframe=true&height="+deviceHeight+"&width="+deviceWidth+"");
+                    $(document).ready(function() {
+                        $('.recharge-btn').click(function() {
+                            var deviceId = $(this).data('device');
+                            window.open('device_recharge_popup.php?device_id=' + encodeURIComponent(deviceId), 'Recharge', 'width=400,height=350');
+                        });
+                    });
                 </script>
                 <?php
                 echo "</tr>";
