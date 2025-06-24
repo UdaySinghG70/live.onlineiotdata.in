@@ -239,7 +239,7 @@ $userArr=$adao->getAllUsers();
         #rechargeModal {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 210vw; height: 100vh;
+            top: 0; left: 0; width: 150vw; height: 100vh;
             background: rgba(0,0,0,0);
             z-index: 9999;
             align-items: center;
@@ -247,15 +247,14 @@ $userArr=$adao->getAllUsers();
         }
         #rechargeModalContent {
             background: #fff;
-            /* Remove border-radius and box-shadow for minimal look */
             border-radius: 0;
             box-shadow: none;
-            max-width: 320px;
-            width: 92vw;
+            max-width: 500px;
+            width: 98vw;
             margin: auto;
             padding: 0;
             position: relative;
-            min-width: 180px;
+            min-width: 220px;
             min-height: 60px;
             display: flex;
             flex-direction: column;
@@ -278,13 +277,10 @@ $userArr=$adao->getAllUsers();
             font-size: 1rem;
             color: #222;
         }
-        @media (max-width: 500px) {
+        @media (max-width: 600px) {
             #rechargeModalContent {
-                max-width: 98vw;
+                max-width: 99vw;
                 min-width: 0;
-            }
-            #rechargeModalBody {
-                padding: 0.5rem 0.2rem 0.5rem 0.2rem;
             }
         }
     </style>
