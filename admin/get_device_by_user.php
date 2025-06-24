@@ -288,9 +288,63 @@ if($deviceArr==null){
     </table>
 </div>
 <!-- Modal for Recharge Info -->
-<div id="rechargeModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:9999;align-items:center;justify-content:center;">
-    <div id="rechargeModalContent" style="background:#fff;border-radius:10px;max-width:400px;width:90vw;margin:auto;box-shadow:0 2px 8px rgba(0,0,0,0.12);padding:0;position:relative;">
-        <button id="closeRechargeModal" style="position:absolute;top:8px;right:12px;background:none;border:none;font-size:1.5rem;color:#888;cursor:pointer;">&times;</button>
-        <div id="rechargeModalBody" style="padding:2rem 1.5rem 1.5rem 1.5rem;"></div>
+<style>
+#rechargeModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.35);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    /* Use flexbox for perfect centering */
+    display: flex;
+}
+#rechargeModalContent {
+    background: #fff;
+    border-radius: 10px;
+    max-width: 340px;
+    width: 92vw;
+    margin: auto;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.13);
+    padding: 0;
+    position: relative;
+    min-width: 220px;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+#closeRechargeModal {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    color: #888;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+#rechargeModalBody {
+    padding: 1.2rem 1.2rem 1rem 1.2rem;
+    font-size: 1rem;
+    color: #222;
+}
+@media (max-width: 500px) {
+    #rechargeModalContent {
+        max-width: 98vw;
+        min-width: 0;
+    }
+    #rechargeModalBody {
+        padding: 0.8rem 0.5rem 0.7rem 0.5rem;
+    }
+}
+</style>
+<div id="rechargeModal">
+    <div id="rechargeModalContent">
+        <button id="closeRechargeModal">&times;</button>
+        <div id="rechargeModalBody"></div>
     </div>
 </div>
