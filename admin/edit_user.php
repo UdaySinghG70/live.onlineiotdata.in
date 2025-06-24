@@ -47,7 +47,6 @@ $userDetails=$ldao->getUserByUserName($user_name);
 <link rel="stylesheet" type="text/css" href="../fonts/iconic/css/material-design-iconic-font.min.css">
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="../login/vendor/animate/animate.css">
-<link rel="stylesheet" type="text/css" href="../login/vendor/animsition/css/animsition.min.css">
 <link rel="stylesheet" type="text/css" href="../css/util.css">
 <link rel="stylesheet" type="text/css" href="../css/main.css">
 <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
