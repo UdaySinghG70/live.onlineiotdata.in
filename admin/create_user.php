@@ -217,7 +217,7 @@ if($adminDetails==null){
 				
                 <div class="form-row">
                     <label class="form-label">Address</label>
-                    <textarea name="address" class="form-control" rows="4" placeholder="Enter full address"></textarea>
+                    <textarea name="address" class="form-control" rows="4" placeholder="Enter full address" required></textarea>
 				</div>
 				
                 <div class="form-row">

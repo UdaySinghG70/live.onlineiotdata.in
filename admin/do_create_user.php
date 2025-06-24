@@ -3,6 +3,10 @@ session_start();
 
 date_default_timezone_set('Asia/Kolkata');
 
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 if($_SESSION['admin_name']==false){
     echo "Invalid Access";
     header('Location: login.php');
@@ -37,15 +41,16 @@ if(containsWhiteSpace($user_name)){
     return;
 }
 
-if(strlen($user_name)<1){
+if(strlen($user_name)<2){
     echo "Minimum User name length must be 2 character";
     return ;
 }
 $mobile_no=$_POST['mobile_no'];
 
 $password=$_POST['password'];
-if(strlen($password)<1){
+if(strlen($password)<2){
     echo "Minimum Password length must be 2 character";
+    return;
 }
 $email_id=$_POST['email_id'];
 $city=$_POST['city'];
@@ -99,7 +104,7 @@ $result=$adao->createUser($user);
 if($result){
     echo $user->user_name." User Created";
 }else{
-    echo "error";
+    echo "Database error occurred while creating user";
 }
 
 

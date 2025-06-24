@@ -54,17 +54,24 @@ function updateUser(){
 function createUser(){
 	
 var frm=	$("#data_frm").serialize();
-//alert(frm);	
+console.log("Form data:", frm);
 $(".loading_file").css("display","block");
 $.ajax({
 	url: 'do_create_user.php',
 	type: 'POST',
 	data: frm,
 	success: function(result){
-		//alert(result);
+		console.log("Success response:", result);
 		$(".msg_task").html(result);
 		$(".loading_file").css("display","none");
 		
+	},
+	error: function(xhr, status, error) {
+		console.log("Error:", xhr.responseText);
+		console.log("Status:", status);
+		console.log("Error:", error);
+		$(".msg_task").html("Error: " + error);
+		$(".loading_file").css("display","none");
 	}
 });
 	
@@ -84,6 +91,14 @@ function validInput(){
 	if(user_name.length==0){
 		valid=false;
 		$("input[name='user_name']").css("border","1px solid #A00");
+	}else if(user_name.length<2){
+		valid=false;
+		$("input[name='user_name']").css("border","1px solid #A00");
+		$(".extra_msg_task").html(" Minimum User name length must be 2 character.");
+	}else if(user_name.indexOf(' ') !== -1){
+		valid=false;
+		$("input[name='user_name']").css("border","1px solid #A00");
+		$(".extra_msg_task").html(" UserName can't contain white space.");
 	}else{
 		$("input[name='user_name']").css("border","1px solid #b3afaf");
 	}
@@ -91,11 +106,15 @@ function validInput(){
 	if(password.length==0){
 		valid=false;
 		$("input[name='password']").css("border","1px solid #A00");
+	}else if(password.length<2){
+		valid=false;
+		$("input[name='password']").css("border","1px solid #A00");
+		$(".extra_msg_task").html(" Minimum Password length must be 2 character.");
 	}else{
 		$("input[name='password']").css("border","1px solid #b3afaf");
 	}
 	
-	if(department_name.length==200){
+	if(department_name.length>200){
 		valid=false;
 		$("input[name='department_name']").css("border","1px solid #A00");
 		$(".extra_msg_task").html(" Department name should be less than 200 characters.");
