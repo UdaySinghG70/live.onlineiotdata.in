@@ -338,64 +338,19 @@ $userArr=$adao->getAllUsers();
         </div>
     </main>
 
-    <!-- Modal for Recharge Info (only included once) -->
-    <div id="rechargeModal">
-        <div id="rechargeModalContent">
-            <button id="closeRechargeModal">&times;</button>
-            <div id="rechargeModalBody"></div>
-        </div>
-    </div>
-
-    <script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
-    <script src="../js/jquery-ui.js"></script>
-    <script src="../js/jquery.fixedtable.js"></script>
-    <script src="../js/thickbox.js"></script>
-    <script src="../js/verge.js"></script>
-    <script src="js/devices.js"></script>
+    <div id="rechargePopupContainer"></div>
     <script>
-        $(function() {
-            // Calculate device width for thickbox
-            let deviceWidth = verge.viewportW();
-            let deviceHeight = verge.viewportH();
-            
-            deviceWidth = deviceWidth * 90 / 100;
-            deviceHeight = deviceHeight * 80 / 100;
-            
-            if(deviceWidth > 800) {
-                deviceWidth = 800;
-            }
-
-            // Show/hide message container
-            function showMessage(message, isError = false) {
-                $('.msgdata')
-                    .html(message)
-                    .removeClass('error')
-                    .toggleClass('error', isError)
-                    .show();
-            }
-
-            // Initialize any existing functionality from devices.js
-            if (typeof initializeDevices === 'function') {
-                initializeDevices();
-            }
-        });
-
-        $(document).ready(function() {
-            // Use event delegation for dynamically loaded .recharge-btn
-            $(document).on('click', '.recharge-btn', function() {
-                var deviceId = $(this).data('device');
-                $('#rechargeModalBody').html('<div style="text-align:center;padding:2rem;">Loading...</div>');
-                $('#rechargeModal').css('display', 'flex').hide().fadeIn(150);
-                $.get('device_recharge_popup.php?device_id=' + encodeURIComponent(deviceId), function(data) {
-                    $('#rechargeModalBody').html(data);
-                });
-            });
-            $('#closeRechargeModal, #rechargeModal').on('click', function(e) {
-                if (e.target === this) {
-                    $('#rechargeModal').fadeOut(150);
-                }
+    $(document).ready(function() {
+        // Use event delegation for dynamically loaded .recharge-btn
+        $(document).on('click', '.recharge-btn', function() {
+            var deviceId = $(this).data('device');
+            $('#rechargePopupContainer').html('<div style="text-align:center;padding:2rem;">Loading...</div>');
+            $.get('device_recharge_popup.php?device_id=' + encodeURIComponent(deviceId), function(data) {
+                $('#rechargePopupContainer').html(data);
+                $('html, body').animate({ scrollTop: $('#rechargePopupContainer').offset().top - 40 }, 300);
             });
         });
+    });
     </script>
 </body>
 </html>
