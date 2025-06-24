@@ -128,114 +128,74 @@ input[type=text]:focus, textarea:focus {
 </style>
 </head>
 <body>
-
-<div class="limiter">
-	<div class="main_body" style="">
-		<?php include_once 'admin_header.php';?>
-		
-		<div style="clear: both">&nbsp;</div>
-		
-		
-		<?php 
-		if($userDetails==null){
-		    echo "User not found.";
-		    return ;
-		}
-		?>
-		<div class="data_container" style="justify-content:center;width: 100%;padding-left: 8%;padding-right: 8%;">
-			
-			<h5 style="padding: 10px 0px;">Edit User</h5>
-			<div class="form_container" style="width: 80%;margin: 0px;">
-				<form id="data_frm">
-				<div class="row">
-				<input type="hidden" name="user_name_old" value="<?php echo $userDetails->user_name;?>">
-					<label>User Name</label>
-						<input type="text" value="<?php echo $userDetails->user_name;?>" class="input_txt" name="user_name" />
-					<b> <?php echo $userDetails->user_name;?></b>
-				</div>
-
-				<div class="row">
-				<label>Password</label>	
-					<input type="text" name="password" class="input_txt" placeholder="Password" value="<?php echo $userDetails->password;?>"/>
-				</div>
-				
-				<div class="row">
-				<label>Department Name</label>	
-					<input type="text" name="department_name" class="input_txt" placeholder="Department Name" value="<?php echo $userDetails->department_name;?>"/>
-				</div>
-				
-				<div class="row">
-				<label>Email ID</label>	
-					<input type="text" name="email_id" class="input_txt" placeholder="Email ID" value="<?php echo $userDetails->email_id;?>"/>
-				</div>
-				
-				<div class="row">
-				<label>Mobile No</label>	
-					<input type="text" name="mobile_no" class="input_txt" placeholder="Mobile No" value="<?php echo $userDetails->mobile;?>"/>
-				</div>
-				
-				<div class="row">
-				<label>City</label>	
-					<input type="text" name="city" class="input_txt" placeholder="City" value="<?php echo $userDetails->city;?>"/>
-				</div>
-				
-				<div class="row">
-				<label>Pincode</label>	
-					<input type="text" name="pincode" class="input_txt" placeholder="Pincode" value="<?php echo $userDetails->pincode;?>" />
-				</div>
-				
-				<div class="row">
-				<label>Address</label>	
-					<textarea rows="4" name="address" style="border: 1px solid #b3afaf;margin: 0px 10px;"><?php echo $userDetails->address;?></textarea>
-				</div>
-				
-				<div class="row">
-				<label>Country</label>	
-					<?php include_once '../countries.php';?>
-				</div>
-				
-				<div class="row">
-					<label>&nbsp;</label>
-					<input type="button" name="update_user" value="Update" class="btn"/>
-					<label class="msg_task">&nbsp;</label>
-					<label class="extra_msg_task">&nbsp;</label>
-				</div>
-				</form>
-			</div>
-			<div style="clear: both;">&nbsp;</div>
-			<div class="data">
-			
-			</div>
-		</div>
-	</div>
-</div>
-
-<!--===============================================================================================-->
-	<script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
-	<script src="js/create_user.js"></script>
-	<script src="../js/jquery-ui.js"></script>
-	<script src="../js/jquery.fixedtable.js"></script>
-	
-	<script type="text/javascript">
-	function SelectElement(id, valueToSelect)
-	{    
-	    var element = document.getElementById(id);
-	    element.value = valueToSelect;
-	}
-	
-	$( function() {
-		$("input[name='start_date']").datepicker({
-			dateFormat: 'yy-mm-dd',
-		});
-	    //$( "#startdate" ).datepicker();
-		$("input[name='end_date']").datepicker({
-			dateFormat: 'yy-mm-dd',
-		});
-
-		SelectElement("countryoptions", "<?php echo $userDetails->country;?>");
-
-
-	});
-</script>
+    <?php include_once 'admin_header.php';?>
+    <main class="dashboard">
+        <h1 class="page-title">Edit User</h1>
+        <div class="form-card" style="max-width: 800px; margin: 0 auto;">
+            <?php 
+            if($userDetails==null){
+                echo "<div class='msgdata' style='color:#dc2626;font-weight:bold;'>User not found.</div>";
+                return ;
+            }
+            ?>
+            <form id="data_frm">
+                <input type="hidden" name="user_name_old" value="<?php echo $userDetails->user_name;?>">
+                <div class="form-row">
+                    <label class="form-label">User Name</label>
+                    <input type="text" value="<?php echo $userDetails->user_name;?>" class="form-control" name="user_name" />
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Password</label>
+                    <input type="text" name="password" class="form-control" placeholder="Password" value="<?php echo $userDetails->password;?>"/>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Department Name</label>
+                    <input type="text" name="department_name" class="form-control" placeholder="Department Name" value="<?php echo $userDetails->department_name;?>"/>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Email ID</label>
+                    <input type="email" name="email_id" class="form-control" placeholder="Email ID" value="<?php echo $userDetails->email_id;?>"/>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Mobile No</label>
+                    <input type="text" name="mobile_no" class="form-control" placeholder="Mobile No" value="<?php echo $userDetails->mobile;?>"/>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">City</label>
+                    <input type="text" name="city" class="form-control" placeholder="City" value="<?php echo $userDetails->city;?>"/>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Pincode</label>
+                    <input type="text" name="pincode" class="form-control" placeholder="Pincode" value="<?php echo $userDetails->pincode;?>" />
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Address</label>
+                    <textarea rows="4" name="address" class="form-control" placeholder="Enter full address"><?php echo $userDetails->address;?></textarea>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Country</label>
+                    <?php include_once '../countries.php';?>
+                </div>
+                <div class="form-row">
+                    <div class="form-label"></div>
+                    <div>
+                        <button type="button" name="update_user" class="btn">Update</button>
+                        <span class="message msg_task"></span>
+                        <span class="message extra_msg_task"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
+    <script src="js/create_user.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <script>
+        $(function() {
+            $("input[name='start_date']").datepicker({ dateFormat: 'yy-mm-dd' });
+            $("input[name='end_date']").datepicker({ dateFormat: 'yy-mm-dd' });
+            SelectElement("countryoptions", "<?php echo $userDetails->country;?>");
+        });
+    </script>
 </body>
 </html>
