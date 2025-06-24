@@ -262,89 +262,9 @@ if($deviceArr==null){
                         </button>
                     </div>
                 </td>";
-                ?>
-                <script>
-                    $(document).ready(function() {
-                        $('.recharge-btn').click(function() {
-                            var deviceId = $(this).data('device');
-                            $('#rechargeModalBody').html('<div style="text-align:center;padding:2rem;">Loading...</div>');
-                            $('#rechargeModal').fadeIn(150);
-                            $.get('device_recharge_popup.php?device_id=' + encodeURIComponent(deviceId), function(data) {
-                                $('#rechargeModalBody').html(data);
-                            });
-                        });
-                        $('#closeRechargeModal, #rechargeModal').on('click', function(e) {
-                            if (e.target === this) {
-                                $('#rechargeModal').fadeOut(150);
-                            }
-                        });
-                    });
-                </script>
-                <?php
                 echo "</tr>";
             }
             ?>
         </tbody>
     </table>
-</div>
-<!-- Modal for Recharge Info -->
-<style>
-#rechargeModal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.35);
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-    /* Use flexbox for perfect centering */
-    display: flex;
-}
-#rechargeModalContent {
-    background: #fff;
-    border-radius: 10px;
-    max-width: 340px;
-    width: 92vw;
-    margin: auto;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.13);
-    padding: 0;
-    position: relative;
-    min-width: 220px;
-    min-height: 80px;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-}
-#closeRechargeModal {
-    position: absolute;
-    top: 6px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 1.3rem;
-    color: #888;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
-}
-#rechargeModalBody {
-    padding: 1.2rem 1.2rem 1rem 1.2rem;
-    font-size: 1rem;
-    color: #222;
-}
-@media (max-width: 500px) {
-    #rechargeModalContent {
-        max-width: 98vw;
-        min-width: 0;
-    }
-    #rechargeModalBody {
-        padding: 0.8rem 0.5rem 0.7rem 0.5rem;
-    }
-}
-</style>
-<div id="rechargeModal">
-    <div id="rechargeModalContent">
-        <button id="closeRechargeModal">&times;</button>
-        <div id="rechargeModalBody"></div>
-    </div>
 </div>
