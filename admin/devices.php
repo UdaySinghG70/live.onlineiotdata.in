@@ -244,7 +244,6 @@ $userArr=$adao->getAllUsers();
             z-index: 9999;
             align-items: center;
             justify-content: center;
-            display: flex;
         }
         #rechargeModalContent {
             background: #fff;
@@ -382,7 +381,7 @@ $userArr=$adao->getAllUsers();
             $(document).on('click', '.recharge-btn', function() {
                 var deviceId = $(this).data('device');
                 $('#rechargeModalBody').html('<div style="text-align:center;padding:2rem;">Loading...</div>');
-                $('#rechargeModal').css('display', 'flex').hide().fadeIn(150);
+                $('#rechargeModal').css({'display':'flex'}).hide().fadeIn(150);
                 $.get('device_recharge_popup.php?device_id=' + encodeURIComponent(deviceId), function(data) {
                     $('#rechargeModalBody').html(data);
                 });
