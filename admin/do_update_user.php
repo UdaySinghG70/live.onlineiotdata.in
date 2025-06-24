@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 if(isset($_SESSION['admin_name'])==false){
     echo "Invalid Login";
     header('Location: login.php');
