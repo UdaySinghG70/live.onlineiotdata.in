@@ -11,7 +11,7 @@ $(document).ready(function(){
 	
 	});
 	
-	$("input[name='create_user']").click(function(){
+	$("button[name='create_user']").click(function(){
 		$(".msg_task").html("&nbsp;");
 		if(validInput()){
 			
