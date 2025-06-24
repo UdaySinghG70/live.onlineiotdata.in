@@ -131,114 +131,177 @@ input[type=text]:focus, textarea:focus {
 </style>
 </head>
 <body>
-
-<div class="limiter">
-	<div class="main_body" style="">
-		<?php include_once 'admin_header.php';?>
-		
-		<div style="clear: both">&nbsp;</div>
-		
-		
-		<?php 
-		if($userDetails==null){
-		    echo "User not found.";
-		    return ;
-		}
-		?>
-		<div class="data_container" style="justify-content:center;width: 100%;padding-left: 8%;padding-right: 8%;">
-			
-			<h5 style="padding: 10px 0px;">Edit User</h5>
-			<div class="form_container" style="width: 80%;margin: 0px;">
-				<form id="data_frm">
-				<div class="row">
-				<input type="hidden" name="user_name_old" value="<?php echo $userDetails->user_name;?>">
-					<label>User Name</label>
-						<input type="text" value="<?php echo $userDetails->user_name;?>" class="input_txt" name="user_name" />
-					<b> <?php echo $userDetails->user_name;?></b>
-				</div>
-
-				<div class="row">
-				<label>Password</label>	
-					<input type="text" name="password" class="input_txt" placeholder="Password" value="<?php echo $userDetails->password;?>"/>
-				</div>
-				
-				<div class="row">
-				<label>Department Name</label>	
-					<input type="text" name="department_name" class="input_txt" placeholder="Department Name" value="<?php echo $userDetails->department_name;?>"/>
-				</div>
-				
-				<div class="row">
-				<label>Email ID</label>	
-					<input type="text" name="email_id" class="input_txt" placeholder="Email ID" value="<?php echo $userDetails->email_id;?>"/>
-				</div>
-				
-				<div class="row">
-				<label>Mobile No</label>	
-					<input type="text" name="mobile_no" class="input_txt" placeholder="Mobile No" value="<?php echo $userDetails->mobile;?>"/>
-				</div>
-				
-				<div class="row">
-				<label>City</label>	
-					<input type="text" name="city" class="input_txt" placeholder="City" value="<?php echo $userDetails->city;?>"/>
-				</div>
-				
-				<div class="row">
-				<label>Pincode</label>	
-					<input type="text" name="pincode" class="input_txt" placeholder="Pincode" value="<?php echo $userDetails->pincode;?>" />
-				</div>
-				
-				<div class="row">
-				<label>Address</label>	
-					<textarea rows="4" name="address" style="border: 1px solid #b3afaf;margin: 0px 10px;"><?php echo $userDetails->address;?></textarea>
-				</div>
-				
-				<div class="row">
-				<label>Country</label>	
-					<?php include_once '../countries.php';?>
-				</div>
-				
-				<div class="row">
-					<label>&nbsp;</label>
-					<input type="button" name="update_user" value="Update" class="btn"/>
-					<label class="msg_task">&nbsp;</label>
-					<label class="extra_msg_task">&nbsp;</label>
-				</div>
-				</form>
-			</div>
-			<div style="clear: both;">&nbsp;</div>
-			<div class="data">
-			
-			</div>
-		</div>
-	</div>
-</div>
-
-<!--===============================================================================================-->
-	<script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
-	<script src="js/create_user.js"></script>
-	<script src="../js/jquery-ui.js"></script>
-	<script src="../js/jquery.fixedtable.js"></script>
-	
-	<script type="text/javascript">
-	function SelectElement(id, valueToSelect)
-	{    
-	    var element = document.getElementById(id);
-	    element.value = valueToSelect;
-	}
-	
-	$( function() {
-		$("input[name='start_date']").datepicker({
-			dateFormat: 'yy-mm-dd',
-		});
-	    //$( "#startdate" ).datepicker();
-		$("input[name='end_date']").datepicker({
-			dateFormat: 'yy-mm-dd',
-		});
-
-		SelectElement("countryoptions", "<?php echo $userDetails->country;?>");
-
-
-	});
-</script>
+    <?php include_once 'admin_header.php';?>
+    <main class="dashboard">
+        <h1 class="page-title">Edit User</h1>
+        <div class="form-card">
+            <?php 
+            if($userDetails==null){
+                echo "<div class='message extra_msg_task'>User not found.</div>";
+                return ;
+            }
+            ?>
+            <form id="data_frm">
+                <div class="form-row">
+                    <label class="form-label">User Name</label>
+                    <input type="hidden" name="user_name_old" value="<?php echo $userDetails->user_name;?>">
+                    <input type="text" value="<?php echo $userDetails->user_name;?>" class="form-control" name="user_name" />
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Password</label>
+                    <input type="text" name="password" class="form-control" placeholder="Password" value="<?php echo $userDetails->password;?>"/>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Department Name</label>
+                    <input type="text" name="department_name" class="form-control" placeholder="Department Name" value="<?php echo $userDetails->department_name;?>"/>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Email ID</label>
+                    <input type="text" name="email_id" class="form-control" placeholder="Email ID" value="<?php echo $userDetails->email_id;?>"/>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Mobile No</label>
+                    <input type="text" name="mobile_no" class="form-control" placeholder="Mobile No" value="<?php echo $userDetails->mobile;?>"/>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">City</label>
+                    <input type="text" name="city" class="form-control" placeholder="City" value="<?php echo $userDetails->city;?>"/>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Pincode</label>
+                    <input type="text" name="pincode" class="form-control" placeholder="Pincode" value="<?php echo $userDetails->pincode;?>" />
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Address</label>
+                    <textarea rows="4" name="address" class="form-control" placeholder="Enter full address"><?php echo $userDetails->address;?></textarea>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Country</label>
+                    <?php include_once '../countries.php';?>
+                </div>
+                <div class="form-row">
+                    <div class="form-label"></div>
+                    <div>
+                        <input type="button" name="update_user" value="Update" class="btn"/>
+                        <span class="message msg_task"></span>
+                        <span class="message extra_msg_task"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
+    <script src="js/create_user.js"></script>
+    <script src="../js/jquery-ui.js"></script>
+    <style>
+        .dashboard {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .page-title {
+            font-size: 1.5rem;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .form-row {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .form-label {
+            flex: 0 0 140px;
+            color: #4a5568;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding-top: 0.5rem;
+        }
+        .form-control {
+            flex: 1;
+            min-width: 200px;
+            max-width: 400px;
+            padding: 0.5rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            color: #2d3748;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #0067ac;
+            box-shadow: 0 0 0 3px rgba(0, 103, 172, 0.1);
+        }
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        select.form-control {
+            background-color: white;
+            cursor: pointer;
+        }
+        .btn {
+            background: #0067ac;
+            color: white;
+            border: none;
+            padding: 0.625rem 1.5rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #005491;
+            transform: translateY(-1px);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .message {
+            margin-left: 1rem;
+            font-size: 0.875rem;
+        }
+        .msg_task {
+            color: #059669;
+        }
+        .extra_msg_task {
+            color: #dc2626;
+        }
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: 1rem;
+                margin-top: 120px;
+            }
+            .form-card {
+                padding: 1.5rem;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .form-label {
+                flex: none;
+                padding-top: 0;
+            }
+            .form-control {
+                width: 100%;
+                max-width: none;
+            }
+        }
+    </style>
 </body>
 </html>
