@@ -1,5 +1,5 @@
 <div class="form-group">
- 
+    <label class="form-label" for="countryoptions">Country</label>
     <select name="country" class="form-control" id="countryoptions" required>
         <option value="">Select a country</option>
         <option value="Afghanistan">Afghanistan</option>
