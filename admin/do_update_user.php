@@ -92,6 +92,7 @@ $user_detail_row->city=$city;
 $user_detail_row->pincode=$pincode;
 $user_detail_row->address=$address;
 $user_detail_row->country=$country;
+$user_detail_row->date_time = date('Y-m-d H:i:s');
 
 $result=$adao->updateUser($user_detail_row,$user_name_old);
 if($result){
