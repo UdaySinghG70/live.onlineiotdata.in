@@ -240,7 +240,7 @@ $userArr=$adao->getAllUsers();
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.35);
+            background: rgba(0,0,0,0);
             z-index: 9999;
             align-items: center;
             justify-content: center;

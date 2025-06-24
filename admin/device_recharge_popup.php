@@ -26,117 +26,127 @@ $found = $stmt->fetch();
 $stmt->close();
 
 ?>
-<style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: transparent;
-        margin: 0;
-        padding: 0;
-    }
-    .popup-card-better {
-        background: #fff;
-        border-radius: 14px;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.13);
-        max-width: 370px;
-        min-width: 220px;
-        width: 96vw;
-        margin: 0 auto;
-        padding: 1.5rem 1.2rem 1.2rem 1.2rem;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        position: relative;
-    }
-    .popup-title-row {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.7rem;
-    }
-    .popup-title-icon {
-        color: #0067ac;
-        font-size: 1.5rem;
-    }
-    .popup-title {
-        font-size: 1.18rem;
-        font-weight: 700;
-        color: #1e293b;
-        letter-spacing: 0.01em;
-    }
-    .popup-divider {
-        height: 1px;
-        background: #e5e7eb;
-        margin: 0.5rem 0 1.1rem 0;
-        border: none;
-    }
-    .popup-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 0.5rem;
-    }
-    .popup-table td {
-        padding: 0.35rem 0.2rem;
-        font-size: 1rem;
-    }
-    .popup-label {
-        color: #64748b;
-        font-weight: 500;
-        text-align: right;
-        width: 40%;
-        padding-right: 0.5rem;
-        vertical-align: top;
-    }
-    .popup-value {
-        color: #1e293b;
-        font-weight: 600;
-        text-align: left;
-        width: 60%;
-        word-break: break-all;
-    }
-    .no-record {
-        color: #dc2626;
-        margin: 0.5rem 0 0.2rem 0;
-        text-align: center;
-        font-weight: 500;
-    }
-    @media (max-width: 500px) {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Device Recharge Info</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: transparent;
+            margin: 0;
+            padding: 0;
+        }
         .popup-card-better {
-            min-width: 0;
-            padding: 1rem 0.3rem 0.7rem 0.3rem;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+            max-width: 370px;
+            min-width: 220px;
+            width: 96vw;
+            margin: 0 auto;
+            padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            position: relative;
+        }
+        .popup-title-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.7rem;
+        }
+        .popup-title-icon {
+            color: #0067ac;
+            font-size: 1.5rem;
         }
         .popup-title {
-            font-size: 1.05rem;
+            font-size: 1.18rem;
+            font-weight: 700;
+            color: #1e293b;
+            letter-spacing: 0.01em;
+        }
+        .popup-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 0.5rem 0 1.1rem 0;
+            border: none;
+        }
+        .popup-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0.5rem;
         }
         .popup-table td {
-            font-size: 0.97rem;
+            padding: 0.35rem 0.2rem;
+            font-size: 1rem;
         }
-    }
-</style>
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<div class="popup-card-better">
-    <div class="popup-title-row">
-        <span class="material-icons popup-title-icon">bolt</span>
-        <span class="popup-title">Device Recharge Info</span>
+        .popup-label {
+            color: #64748b;
+            font-weight: 500;
+            text-align: right;
+            width: 40%;
+            padding-right: 0.5rem;
+            vertical-align: top;
+        }
+        .popup-value {
+            color: #1e293b;
+            font-weight: 600;
+            text-align: left;
+            width: 60%;
+            word-break: break-all;
+        }
+        .no-record {
+            color: #dc2626;
+            margin: 0.5rem 0 0.2rem 0;
+            text-align: center;
+            font-weight: 500;
+        }
+        @media (max-width: 500px) {
+            .popup-card-better {
+                min-width: 0;
+                padding: 1rem 0.3rem 0.7rem 0.3rem;
+            }
+            .popup-title {
+                font-size: 1.05rem;
+            }
+            .popup-table td {
+                font-size: 0.97rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="popup-card-better">
+        <div class="popup-title-row">
+            <span class="material-icons popup-title-icon">bolt</span>
+            <span class="popup-title">Device Recharge Info</span>
+        </div>
+        <hr class="popup-divider"/>
+        <table class="popup-table">
+            <tr>
+                <td class="popup-label">Device ID:</td>
+                <td class="popup-value"><?php echo htmlspecialchars($device_id); ?></td>
+            </tr>
+            <?php if ($found): ?>
+                <tr>
+                    <td class="popup-label">Start Date:</td>
+                    <td class="popup-value"><?php echo htmlspecialchars($start_date); ?></td>
+                </tr>
+                <tr>
+                    <td class="popup-label">End Date:</td>
+                    <td class="popup-value"><?php echo htmlspecialchars($end_date); ?></td>
+                </tr>
+            <?php else: ?>
+                <tr>
+                    <td colspan="2" class="no-record">No recharge record found for this device.</td>
+                </tr>
+            <?php endif; ?>
+        </table>
     </div>
-    <hr class="popup-divider"/>
-    <table class="popup-table">
-        <tr>
-            <td class="popup-label">Device ID:</td>
-            <td class="popup-value"><?php echo htmlspecialchars($device_id); ?></td>
-        </tr>
-        <?php if ($found): ?>
-            <tr>
-                <td class="popup-label">Start Date:</td>
-                <td class="popup-value"><?php echo htmlspecialchars($start_date); ?></td>
-            </tr>
-            <tr>
-                <td class="popup-label">End Date:</td>
-                <td class="popup-value"><?php echo htmlspecialchars($end_date); ?></td>
-            </tr>
-        <?php else: ?>
-            <tr>
-                <td colspan="2" class="no-record">No recharge record found for this device.</td>
-            </tr>
-        <?php endif; ?>
-    </table>
-</div> 
+</body>
+</html> 
