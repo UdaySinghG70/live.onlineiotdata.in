@@ -256,7 +256,7 @@ if($deviceArr==null){
                             <span class='material-icons'>edit</span>
                             Edit
                         </a>
-                        <a href='get_recharge_history.php?device_id=".htmlspecialchars($deviceArr[$i]->device_id)."&c_height=350&c_width=400&keepThis=true&TB_iframe=true&height=350&width=400' 
+                        <a href='get_recharge_history.php?device_id=".htmlspecialchars($deviceArr[$i]->device_id)."&keepThis=true&TB_iframe=true&height=250&width=100' 
                            title='Device Recharge History' 
                            class='thickbox action-btn recharge' 
                            id='rh".htmlspecialchars($deviceArr[$i]->id)."'>
@@ -265,6 +265,11 @@ if($deviceArr==null){
                         </a>
                     </div>
                 </td>";
+                ?>
+                <script>
+                    $("#rh<?php echo $deviceArr[$i]->id; ?>").attr("href", "get_recharge_history.php?device_id=<?php echo $deviceArr[$i]->device_id;?>&c_height="+deviceHeight+"&c_width="+deviceWidth+"&keepThis=true&TB_iframe=true&height="+deviceHeight+"&width="+deviceWidth+"");
+                </script>
+                <?php
                 echo "</tr>";
             }
             ?>
