@@ -267,7 +267,16 @@ if($deviceArr==null){
                     $(document).ready(function() {
                         $('.recharge-btn').click(function() {
                             var deviceId = $(this).data('device');
-                            window.open('device_recharge_popup.php?device_id=' + encodeURIComponent(deviceId), 'Recharge', 'width=400,height=350');
+                            $('#rechargeModalBody').html('<div style="text-align:center;padding:2rem;">Loading...</div>');
+                            $('#rechargeModal').fadeIn(150);
+                            $.get('device_recharge_popup.php?device_id=' + encodeURIComponent(deviceId), function(data) {
+                                $('#rechargeModalBody').html(data);
+                            });
+                        });
+                        $('#closeRechargeModal, #rechargeModal').on('click', function(e) {
+                            if (e.target === this) {
+                                $('#rechargeModal').fadeOut(150);
+                            }
                         });
                     });
                 </script>
@@ -277,4 +286,11 @@ if($deviceArr==null){
             ?>
         </tbody>
     </table>
+</div>
+<!-- Modal for Recharge Info -->
+<div id="rechargeModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);z-index:9999;align-items:center;justify-content:center;">
+    <div id="rechargeModalContent" style="background:#fff;border-radius:10px;max-width:400px;width:90vw;margin:auto;box-shadow:0 2px 8px rgba(0,0,0,0.12);padding:0;position:relative;">
+        <button id="closeRechargeModal" style="position:absolute;top:8px;right:12px;background:none;border:none;font-size:1.5rem;color:#888;cursor:pointer;">&times;</button>
+        <div id="rechargeModalBody" style="padding:2rem 1.5rem 1.5rem 1.5rem;"></div>
+    </div>
 </div>
