@@ -32,6 +32,7 @@ $stmt->close();
     <meta charset="UTF-8">
     <title>Device Recharge Info</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -39,59 +40,76 @@ $stmt->close();
             margin: 0;
             padding: 0;
         }
-        .popup-content-minimal {
+        .popup-card-better {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+            max-width: 340px;
+            min-width: 200px;
+            margin: 0 auto;
+            padding: 1.5rem 1.2rem 1.2rem 1.2rem;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            min-width: 180px;
-            min-height: 60px;
-            padding: 0.5rem 0.5rem 0.3rem 0.5rem;
-            background: none;
-            box-shadow: none;
-            border-radius: 0;
+            position: relative;
+        }
+        .popup-icon {
+            color: #2196f3;
+            font-size: 2.2rem;
+            margin-bottom: 0.2rem;
         }
         .popup-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #0067ac;
-            margin-bottom: 1rem;
+            font-size: 1.18rem;
+            font-weight: 700;
+            color: #1565c0;
+            margin-bottom: 1.1rem;
             letter-spacing: 0.01em;
+            text-align: center;
         }
         .popup-row {
-            margin-bottom: 0.5rem;
-            font-size: 0.98rem;
+            margin-bottom: 0.7rem;
+            font-size: 1.01rem;
             display: flex;
             gap: 0.5rem;
+            align-items: center;
         }
         .label {
             color: #64748b;
             font-weight: 500;
+            min-width: 90px;
+            text-align: right;
         }
         .value {
             color: #1e293b;
             font-weight: 600;
+            word-break: break-all;
         }
         .no-record {
             color: #dc2626;
             margin-bottom: 0.5rem;
+            font-weight: 500;
         }
         @media (max-width: 500px) {
-            .popup-content-minimal {
+            .popup-card-better {
+                max-width: 98vw;
                 min-width: 0;
-                padding: 0.3rem 0.1rem 0.2rem 0.1rem;
+                padding: 1rem 0.3rem 0.7rem 0.3rem;
             }
             .popup-title {
-                font-size: 1rem;
+                font-size: 1.05rem;
             }
             .popup-row {
-                font-size: 0.95rem;
+                font-size: 0.97rem;
+            }
+            .label {
+                min-width: 70px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="popup-content-minimal">
+    <div class="popup-card-better">
+        <span class="material-icons popup-icon">info</span>
         <div class="popup-title">Device Recharge Info</div>
         <div class="popup-row"><span class="label">Device ID:</span> <span class="value"><?php echo htmlspecialchars($device_id); ?></span></div>
         <?php if ($found): ?>
