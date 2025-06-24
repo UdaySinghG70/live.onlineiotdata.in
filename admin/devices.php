@@ -245,7 +245,7 @@ $userArr=$adao->getAllUsers();
             align-items: center;
             justify-content: center;
             /* Center using flexbox */
-            display: flex;
+           
         }
         #rechargeModalContent {
             background: #fff;
