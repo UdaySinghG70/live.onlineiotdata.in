@@ -244,18 +244,21 @@ $userArr=$adao->getAllUsers();
             z-index: 9999;
             align-items: center;
             justify-content: center;
+            /* Center using flexbox */
+            display: flex;
         }
         #rechargeModalContent {
             background: #fff;
-            border-radius: 10px;
-            max-width: 340px;
+            /* Remove border-radius and box-shadow for minimal look */
+            border-radius: 0;
+            box-shadow: none;
+            max-width: 320px;
             width: 92vw;
             margin: auto;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.13);
             padding: 0;
             position: relative;
-            min-width: 220px;
-            min-height: 80px;
+            min-width: 180px;
+            min-height: 60px;
             display: flex;
             flex-direction: column;
             align-items: stretch;
@@ -266,14 +269,14 @@ $userArr=$adao->getAllUsers();
             right: 10px;
             background: none;
             border: none;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: #888;
             cursor: pointer;
             padding: 0;
             line-height: 1;
         }
         #rechargeModalBody {
-            padding: 1.2rem 1.2rem 1rem 1.2rem;
+            padding: 0.8rem 0.8rem 0.7rem 0.8rem;
             font-size: 1rem;
             color: #222;
         }
@@ -283,7 +286,7 @@ $userArr=$adao->getAllUsers();
                 min-width: 0;
             }
             #rechargeModalBody {
-                padding: 0.8rem 0.5rem 0.7rem 0.5rem;
+                padding: 0.5rem 0.2rem 0.5rem 0.2rem;
             }
         }
     </style>
