@@ -35,28 +35,34 @@ $stmt->close();
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8fafc;
+            background: transparent;
             margin: 0;
             padding: 0;
         }
-        .popup-card {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-            max-width: 350px;
-            margin: 2rem auto;
-            padding: 2rem 1.5rem;
-            text-align: center;
+        .popup-content-minimal {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 180px;
+            min-height: 60px;
+            padding: 0.5rem 0.5rem 0.3rem 0.5rem;
+            background: none;
+            box-shadow: none;
+            border-radius: 0;
         }
         .popup-title {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: #0067ac;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: 0.01em;
         }
         .popup-row {
-            margin-bottom: 1rem;
-            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.98rem;
+            display: flex;
+            gap: 0.5rem;
         }
         .label {
             color: #64748b;
@@ -66,32 +72,34 @@ $stmt->close();
             color: #1e293b;
             font-weight: 600;
         }
-        .close-btn {
-            margin-top: 1.5rem;
-            background: #0067ac;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 0.5rem 1.5rem;
-            font-size: 1rem;
-            cursor: pointer;
+        .no-record {
+            color: #dc2626;
+            margin-bottom: 0.5rem;
         }
-        .close-btn:hover {
-            background: #005491;
+        @media (max-width: 500px) {
+            .popup-content-minimal {
+                min-width: 0;
+                padding: 0.3rem 0.1rem 0.2rem 0.1rem;
+            }
+            .popup-title {
+                font-size: 1rem;
+            }
+            .popup-row {
+                font-size: 0.95rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="popup-card">
+    <div class="popup-content-minimal">
         <div class="popup-title">Device Recharge Info</div>
         <div class="popup-row"><span class="label">Device ID:</span> <span class="value"><?php echo htmlspecialchars($device_id); ?></span></div>
         <?php if ($found): ?>
             <div class="popup-row"><span class="label">Start Date:</span> <span class="value"><?php echo htmlspecialchars($start_date); ?></span></div>
             <div class="popup-row"><span class="label">End Date:</span> <span class="value"><?php echo htmlspecialchars($end_date); ?></span></div>
         <?php else: ?>
-            <div class="popup-row" style="color:#dc2626;">No recharge record found for this device.</div>
+            <div class="no-record">No recharge record found for this device.</div>
         <?php endif; ?>
-        <button class="close-btn" onclick="window.close()">Close</button>
     </div>
 </body>
 </html> 
