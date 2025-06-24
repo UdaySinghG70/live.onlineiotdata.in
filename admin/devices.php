@@ -321,7 +321,7 @@ $userArr=$adao->getAllUsers();
                 </div>
                 
                 <input type="button" name="get_devices" class="btn" value="Get Devices">
-                <span class="material-icons">search</span>
+                
             </form>
 
             <div class="msg-container msgdata" style="display: none;">
