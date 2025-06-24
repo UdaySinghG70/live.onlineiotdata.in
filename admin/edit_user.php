@@ -51,6 +51,9 @@ $userDetails=$ldao->getUserByUserName($user_name);
 <link rel="stylesheet" type="text/css" href="../css/main.css">
 <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
 <!--===============================================================================================-->
+<link rel="stylesheet" href="css/admin-style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<!--===============================================================================================-->
 <style type="text/css">
 	.nav_control ul{
 		list-style: none;
@@ -129,79 +132,85 @@ input[type=text]:focus, textarea:focus {
 </head>
 <body>
 
-<?php include_once 'admin_header.php';?>
+<div class="limiter">
+	<div class="main_body" style="">
+		<?php include_once 'admin_header.php';?>
+		
+		<div style="clear: both">&nbsp;</div>
+		
+		
+		<?php 
+		if($userDetails==null){
+		    echo "User not found.";
+		    return ;
+		}
+		?>
+		<div class="data_container" style="justify-content:center;width: 100%;padding-left: 8%;padding-right: 8%;">
+			
+			<h5 style="padding: 10px 0px;">Edit User</h5>
+			<div class="form_container" style="width: 80%;margin: 0px;">
+				<form id="data_frm">
+				<div class="row">
+				<input type="hidden" name="user_name_old" value="<?php echo $userDetails->user_name;?>">
+					<label>User Name</label>
+						<input type="text" value="<?php echo $userDetails->user_name;?>" class="input_txt" name="user_name" />
+					<b> <?php echo $userDetails->user_name;?></b>
+				</div>
 
-<div style="clear: both">&nbsp;</div>
-
-<?php 
-if($userDetails==null){
-    echo "User not found.";
-    return ;
-}
-?>
-<div class="data_container" style="justify-content:center;width: 100%;padding-left: 8%;padding-right: 8%;">
-    <h5 style="padding: 10px 0px;">Edit User</h5>
-    <div class="form_container" style="width: 80%;margin: 0px;">
-        <form id="data_frm">
-        <div class="row">
-        <input type="hidden" name="user_name_old" value="<?php echo $userDetails->user_name;?>">
-            <label>User Name</label>
-                <input type="text" value="<?php echo $userDetails->user_name;?>" class="input_txt" name="user_name" />
-            <b> <?php echo $userDetails->user_name;?></b>
-        </div>
-
-        <div class="row">
-        <label>Password</label>	
-            <input type="text" name="password" class="input_txt" placeholder="Password" value="<?php echo $userDetails->password;?>"/>
-        </div>
-        
-        <div class="row">
-        <label>Department Name</label>	
-            <input type="text" name="department_name" class="input_txt" placeholder="Department Name" value="<?php echo $userDetails->department_name;?>"/>
-        </div>
-        
-        <div class="row">
-        <label>Email ID</label>	
-            <input type="text" name="email_id" class="input_txt" placeholder="Email ID" value="<?php echo $userDetails->email_id;?>"/>
-        </div>
-        
-        <div class="row">
-        <label>Mobile No</label>	
-            <input type="text" name="mobile_no" class="input_txt" placeholder="Mobile No" value="<?php echo $userDetails->mobile;?>"/>
-        </div>
-        
-        <div class="row">
-        <label>City</label>	
-            <input type="text" name="city" class="input_txt" placeholder="City" value="<?php echo $userDetails->city;?>"/>
-        </div>
-        
-        <div class="row">
-        <label>Pincode</label>	
-            <input type="text" name="pincode" class="input_txt" placeholder="Pincode" value="<?php echo $userDetails->pincode;?>" />
-        </div>
-        
-        <div class="row">
-        <label>Address</label>	
-            <textarea rows="4" name="address" style="border: 1px solid #b3afaf;margin: 0px 10px;"><?php echo $userDetails->address;?></textarea>
-        </div>
-        
-        <div class="row">
-        <label>Country</label>	
-            <?php include_once '../countries.php';?>
-        </div>
-        
-        <div class="row">
-            <label>&nbsp;</label>
-            <input type="button" name="update_user" value="Update" class="btn"/>
-            <label class="msg_task">&nbsp;</label>
-            <label class="extra_msg_task">&nbsp;</label>
-        </div>
-        </form>
-    </div>
-    <div style="clear: both;">&nbsp;</div>
-    <div class="data">
-    
-    </div>
+				<div class="row">
+				<label>Password</label>	
+					<input type="text" name="password" class="input_txt" placeholder="Password" value="<?php echo $userDetails->password;?>"/>
+				</div>
+				
+				<div class="row">
+				<label>Department Name</label>	
+					<input type="text" name="department_name" class="input_txt" placeholder="Department Name" value="<?php echo $userDetails->department_name;?>"/>
+				</div>
+				
+				<div class="row">
+				<label>Email ID</label>	
+					<input type="text" name="email_id" class="input_txt" placeholder="Email ID" value="<?php echo $userDetails->email_id;?>"/>
+				</div>
+				
+				<div class="row">
+				<label>Mobile No</label>	
+					<input type="text" name="mobile_no" class="input_txt" placeholder="Mobile No" value="<?php echo $userDetails->mobile;?>"/>
+				</div>
+				
+				<div class="row">
+				<label>City</label>	
+					<input type="text" name="city" class="input_txt" placeholder="City" value="<?php echo $userDetails->city;?>"/>
+				</div>
+				
+				<div class="row">
+				<label>Pincode</label>	
+					<input type="text" name="pincode" class="input_txt" placeholder="Pincode" value="<?php echo $userDetails->pincode;?>" />
+				</div>
+				
+				<div class="row">
+				<label>Address</label>	
+					<textarea rows="4" name="address" style="border: 1px solid #b3afaf;margin: 0px 10px;"><?php echo $userDetails->address;?></textarea>
+				</div>
+				
+				<div class="row">
+				<label>Country</label>	
+					<?php include_once '../countries.php';?>
+				</div>
+				
+				<div class="row">
+					<label>&nbsp;</label>
+					<input type="button" name="update_user" value="Update" class="btn"/>
+					<label class="msg_task">&nbsp;</label>
+					<label class="extra_msg_task">&nbsp;</label>
+				</div>
+				</form>
+			</div>
+			<div style="clear: both;">&nbsp;</div>
+			<div class="data">
+			
+			</div>
+		</div>
+	</div>
 </div>
 
 <!--===============================================================================================-->
