@@ -261,11 +261,11 @@ if($linkCount - $pg > 10){
                             <td><?php echo htmlspecialchars($user->mobile); ?></td>
                             <td><?php echo htmlspecialchars($user->city); ?></td>
                             <td>
-                                <button class="action-btn edit_user" data-id="<?php echo $user->id; ?>">
+                                <button class="action-btn edit_user" data-user_name="<?php echo htmlspecialchars($user->user_name); ?>">
                                     <span class="material-icons">edit</span>
                                     Edit
                                 </button>
-                                <button class="action-btn delete delete_user" data-id="<?php echo $user->id; ?>">
+                                <button class="action-btn delete delete_user" rel-user="<?php echo htmlspecialchars($user->user_name); ?>">
                                     <span class="material-icons">delete</span>
                                     Delete
                                 </button>
@@ -299,21 +299,38 @@ if($linkCount - $pg > 10){
 		</div>
     </main>
 
+	<div class="msgdata" style="margin-top:1rem;color:#dc2626;font-weight:bold;"></div>
+
 	<script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
 	<script src="../js/jquery-ui.js"></script>
     <script>
         $(document).ready(function() {
             // Edit user
             $('.edit_user').click(function() {
-                var userId = $(this).data('id');
-                window.location.href = 'edit_user.php?id=' + userId;
+                var userName = $(this).data('user_name');
+                window.location.href = 'edit_user.php?user_name=' + encodeURIComponent(userName);
             });
 
             // Delete user
             $('.delete_user').click(function() {
                 if (confirm('Are you sure you want to delete this user?')) {
-                    var userId = $(this).data('id');
-                    // Add your delete logic here
+                    var user = $(this).attr('rel-user');
+                    $(".msgdata").html("&nbsp;");
+                    $.ajax({
+                        url: 'do_delete_user.php',
+                        type: 'POST',
+                        data: { username: user },
+                        success: function(result) {
+                            if(result.indexOf("User deleted successfully") > -1){
+                                location.reload();
+                            } else if(result.indexOf("Delete Devices under this user") > -1){
+                                alert("Can't delete User, Delete devices first under this user " + user);
+                                $(".msgdata").html(result + " " + user);
+                            } else {
+                                $(".msgdata").html(result);
+                            }
+                        }
+                    });
                 }
             });
 
