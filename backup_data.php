@@ -3,6 +3,17 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Support CLI arguments as key=value pairs
+if (php_sapi_name() === 'cli') {
+    global $argv;
+    foreach ($argv as $arg) {
+        if (strpos($arg, '=') !== false) {
+            list($key, $value) = explode('=', $arg, 2);
+            $_REQUEST[$key] = $value;
+        }
+    }
+}
+
 // Function to clean old daily backups
 function cleanOldDailyBackups($daysToKeep = 3) {
 	$dailyBackupDir = "backup/daily";
