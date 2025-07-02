@@ -258,19 +258,6 @@ function processLoggedData($topic, $message) {
     $formattedDate = $date->format('Y-m-d');
     $formattedTime = $date->format('H:i:s');
 
-    // Check if the date falls within a recharge period
-    $rechargeQuery = "SELECT COUNT(*) as count FROM recharge 
-                      WHERE device_id = '$device_id' 
-                      AND '$formattedDate' >= start_date 
-                      AND '$formattedDate' <= end_date";
-    $rechargeResult = QueryManager::getOneRow($rechargeQuery);
-
-    // If no valid recharge period found, ignore the message
-    if (!$rechargeResult || $rechargeResult[0] == 0) {
-        error_log("Ignored MQTT message: No valid recharge period found for device '$device_id' on date '$formattedDate'");
-        return;
-    }
-    
     // Store the raw data string (original message without device_id)
     $dataString = $timestamp . ',' . implode(',', $values);
     
