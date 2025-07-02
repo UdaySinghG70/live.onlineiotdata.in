@@ -74,6 +74,9 @@ logError("MQTT Client starting up...");
 function connectToMqtt() {
     global $mqtt, $reconnectAttempts, $lastReconnectTime, $isConnected;
     
+    // Define a unique client ID for the MQTT connection
+    $clientId = "php-mqtt-client-" . uniqid();
+    
     try {
         // Create MQTT client instance
         $mqtt = new MqttClient(MQTT_HOST, MQTT_PORT, $clientId);
