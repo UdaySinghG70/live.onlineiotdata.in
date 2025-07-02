@@ -1,4 +1,7 @@
+
 <?php
+file_put_contents('/var/www/live.onlineiotdata.in/cron_php.log', date('Y-m-d H:i:s') . " - Script triggered with args: " . json_encode($_GET) . "\n", FILE_APPEND);
+
 // Enable error reporting
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
