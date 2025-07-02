@@ -27,7 +27,6 @@ $department_name = $userObj ? $userObj->department_name : '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Availability</title>
-    <link rel="icon" type="image/png" href="images/icons/favicon.png"/>
     <link rel="stylesheet" type="text/css" href="css/util.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="css/common.css">
@@ -300,7 +299,7 @@ $department_name = $userObj ? $userObj->department_name : '';
         }
 
         /* Tooltip style */
-        .square:not(.empty)[title]:hover::after {
+        /* .square:not(.empty)[title]:hover::after {
             content: attr(title);
             position: absolute;
             bottom: 100%;
@@ -314,7 +313,7 @@ $department_name = $userObj ? $userObj->department_name : '';
             white-space: nowrap;
             z-index: 2;
             margin-bottom: 5px;
-        }
+        } */
 
         .square[data-level="0"] { background-color: #ebedf0; }
         .square[data-level="1"] { background-color: #b2f2bb; }
@@ -1034,6 +1033,42 @@ $department_name = $userObj ? $userObj->department_name : '';
                 $('.squares-container').scrollLeft($(this).scrollLeft());
             });
         });
+    </script>
+    <!-- Custom Tooltip -->
+    <div id="custom-tooltip" style="display:none; position:fixed; z-index:9999; pointer-events:none; background:#24292e; color:#fff; font-size:12px; border-radius:4px; padding:4px 8px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.15);"></div>
+    <script>
+    // Custom tooltip logic for grid squares
+    $(document).on('mouseenter', '.square:not(.empty)', function(e) {
+        const tooltipText = $(this).attr('title');
+        if (tooltipText) {
+            $('#custom-tooltip').text(tooltipText).show();
+            $(this).data('original-title', tooltipText);
+            $(this).removeAttr('title'); // Prevent default browser tooltip
+        }
+    }).on('mousemove', '.square:not(.empty)', function(e) {
+        // Position tooltip, keep inside viewport
+        const tooltip = $('#custom-tooltip');
+        const padding = 10;
+        const tooltipWidth = tooltip.outerWidth();
+        const tooltipHeight = tooltip.outerHeight();
+        let left = e.clientX + 15;
+        let top = e.clientY + 10;
+        if (left + tooltipWidth + padding > window.innerWidth) {
+            left = window.innerWidth - tooltipWidth - padding;
+        }
+        if (top + tooltipHeight + padding > window.innerHeight) {
+            top = window.innerHeight - tooltipHeight - padding;
+        }
+        tooltip.css({ left, top });
+    }).on('mouseleave', '.square:not(.empty)', function(e) {
+        $('#custom-tooltip').hide().text('');
+        // Optionally restore the title attribute if needed
+        const originalTitle = $(this).data('original-title');
+        if (originalTitle) {
+            $(this).attr('title', originalTitle);
+            $(this).removeData('original-title');
+        }
+    });
     </script>
 </body>
 </html> 
