@@ -316,12 +316,12 @@ $department_name = $userObj ? $userObj->department_name : '';
             margin-bottom: 5px;
         } */
 
-        .square[data-level="0"] { background-color: #ebedf0; }
-        .square[data-level="1"] { background-color: #b2f2bb; }
-        .square[data-level="2"] { background-color: #69db7c; }
-        .square[data-level="3"] { background-color: #4dabf7; }
-        .square[data-level="4"] { background-color: #845ef7; }
-        .square[data-level="5"] { background-color: #f03e3e; }
+        .square[data-level="0"], .legend-square[data-level="0"] { background-color: #e9ecef; }   /* Light grey */
+        .square[data-level="1"], .legend-square[data-level="1"] { background-color: #bcdff1; }   /* Blue-grey */
+        .square[data-level="2"], .legend-square[data-level="2"] { background-color: #5fa8d3; }   /* Medium blue */
+        .square[data-level="3"], .legend-square[data-level="3"] { background-color: #1976d2; }   /* Deep blue */
+        .square[data-level="4"], .legend-square[data-level="4"] { background-color: #81c784; }   /* Soft green */
+        .square[data-level="5"], .legend-square[data-level="5"] { background-color: #388e3c; }   /* Deep green */
 
         .legend {
             display: flex;
@@ -339,13 +339,6 @@ $department_name = $userObj ? $userObj->department_name : '';
             height: 15px;
             border-radius: 3px;
         }
-
-        .legend-square[data-level="0"] { background-color: #ebedf0; }
-        .legend-square[data-level="1"] { background-color: #b2f2bb; }
-        .legend-square[data-level="2"] { background-color: #69db7c; }
-        .legend-square[data-level="3"] { background-color: #4dabf7; }
-        .legend-square[data-level="4"] { background-color: #845ef7; }
-        .legend-square[data-level="5"] { background-color: #f03e3e; }
 
         .device-section {
             background-color: #fff;
@@ -821,19 +814,19 @@ $department_name = $userObj ? $userObj->department_name : '';
             // Add CSS for the new color scheme
             $('<style>')
                 .text(`
-                    .square[data-level="0"] { background-color: #ebedf0; }
-                    .square[data-level="1"] { background-color: #b2f2bb; }
-                    .square[data-level="2"] { background-color: #69db7c; }
-                    .square[data-level="3"] { background-color: #4dabf7; }
-                    .square[data-level="4"] { background-color: #845ef7; }
-                    .square[data-level="5"] { background-color: #f03e3e; }
+                    .square[data-level="0"] { background-color: #e9ecef; }
+                    .square[data-level="1"] { background-color: #bcdff1; }
+                    .square[data-level="2"] { background-color: #5fa8d3; }
+                    .square[data-level="3"] { background-color: #1976d2; }
+                    .square[data-level="4"] { background-color: #81c784; }
+                    .square[data-level="5"] { background-color: #388e3c; }
                     
-                    .legend-square[data-level="0"] { background-color: #ebedf0; }
-                    .legend-square[data-level="1"] { background-color: #b2f2bb; }
-                    .legend-square[data-level="2"] { background-color: #69db7c; }
-                    .legend-square[data-level="3"] { background-color: #4dabf7; }
-                    .legend-square[data-level="4"] { background-color: #845ef7; }
-                    .legend-square[data-level="5"] { background-color: #f03e3e; }
+                    .legend-square[data-level="0"] { background-color: #e9ecef; }
+                    .legend-square[data-level="1"] { background-color: #bcdff1; }
+                    .legend-square[data-level="2"] { background-color: #5fa8d3; }
+                    .legend-square[data-level="3"] { background-color: #1976d2; }
+                    .legend-square[data-level="4"] { background-color: #81c784; }
+                    .legend-square[data-level="5"] { background-color: #388e3c; }
                 `)
                 .appendTo('head');
 
