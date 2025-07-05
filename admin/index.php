@@ -909,7 +909,7 @@ if($adminDetails==null){
                             <button type="button" class="btn btn-secondary enhanced-add-btn" id="addParameter" title="Add Parameter"><span style="font-size:1.2em;vertical-align:middle;">＋</span> Add</button>
                         </div>
                         <div id="parametersList" class="scrollable-params">
-                            <div class="parameter-row enhanced-parameter-row">
+                            <div class="enhanced-parameter-row">
                                 <div class="form-group">
                                     <label><span style="color:#e03131">*</span> Parameter Name</label>
                                     <input type="text" name="paramName[]" placeholder="e.g., Temperature" required>
@@ -928,7 +928,7 @@ if($adminDetails==null){
                                     <label>Unit</label>
                                     <input type="text" name="paramUnit[]" class="param-unit-input" placeholder="e.g., °C">
                                 </div>
-                                <button type="button" class="btn btn-danger remove-param" title="Remove Parameter" style="margin-top: 1.5rem;"><span class="material-icons">delete</span></button>
+                                <button type="button" class="enhanced-remove-btn" title="Remove Parameter"><span class="material-icons">delete</span></button>
                             </div>
                         </div>
                     </div>
@@ -1075,7 +1075,7 @@ if($adminDetails==null){
 
         // Utility: handle auto-fill of unit for Date Time
         function handleTypeUnitAutofill(selectElem) {
-            const unitInput = selectElem.closest('.parameter-row').querySelector('.param-unit-input');
+            const unitInput = selectElem.closest('.enhanced-parameter-row').querySelector('.param-unit-input');
             if (selectElem.value === 'Date Time') {
                 unitInput.value = 'DD-MM-YYYY hh:mm:ss';
             } else if (unitInput.value === 'DD-MM-YYYY hh:mm:ss') {
@@ -1097,7 +1097,7 @@ if($adminDetails==null){
         // Add new parameter row
         addParamBtn.addEventListener('click', function() {
             const newRow = document.createElement('div');
-            newRow.className = 'parameter-row';
+            newRow.className = 'enhanced-parameter-row';
             newRow.innerHTML = `
                 <div class="form-group">
                     <label>Parameter Name</label>
@@ -1117,7 +1117,7 @@ if($adminDetails==null){
                     <label>Unit</label>
                     <input type="text" name="paramUnit[]" class="param-unit-input" placeholder="e.g., °C">
                 </div>
-                <button type="button" class="btn btn-danger remove-param" style="margin-top: 1.5rem;"><span class="material-icons">delete</span></button>
+                <button type="button" class="enhanced-remove-btn" title="Remove Parameter"><span class="material-icons">delete</span></button>
             `;
             parametersList.appendChild(newRow);
             attachTypeUnitListeners();
@@ -1128,10 +1128,10 @@ if($adminDetails==null){
 
         // Remove parameter row (delegate event)
         parametersList.addEventListener('click', function(e) {
-            if (e.target.closest('.remove-param')) {
-                const rows = parametersList.querySelectorAll('.parameter-row');
+            if (e.target.closest('.enhanced-remove-btn')) {
+                const rows = parametersList.querySelectorAll('.enhanced-parameter-row');
                 if (rows.length > 1) {
-                    e.target.closest('.parameter-row').remove();
+                    e.target.closest('.enhanced-parameter-row').remove();
                 } else {
                     alert('At least one parameter is required.');
                 }
@@ -1166,7 +1166,7 @@ if($adminDetails==null){
                         presetForm.reset();
                         // Reset to one parameter row
                         parametersList.innerHTML = `
-                            <div class="parameter-row">
+                            <div class="enhanced-parameter-row">
                                 <div class="form-group">
                                     <label>Parameter Name</label>
                                     <input type="text" name="paramName[]" placeholder="e.g., Temperature" required>
@@ -1185,7 +1185,7 @@ if($adminDetails==null){
                                     <label>Unit</label>
                                     <input type="text" name="paramUnit[]" class="param-unit-input" placeholder="e.g., °C">
                                 </div>
-                                <button type="button" class="btn btn-danger remove-param" style="margin-top: 1.5rem;"><span class="material-icons">delete</span></button>
+                                <button type="button" class="enhanced-remove-btn" title="Remove Parameter"><span class="material-icons">delete</span></button>
                             </div>
                         `;
                     } else {
