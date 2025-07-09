@@ -42,7 +42,7 @@ $department_name = $userObj ? $userObj->department_name : '';
         }
 
         body {
-            background-color: #f5f5f5;
+            background-color: #e3f2fd;
             padding: 0;
             min-height: 100vh;
         }

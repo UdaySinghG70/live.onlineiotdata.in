@@ -41,7 +41,7 @@ $deviceArr=$ddao->getDeviceByUserName($user->user_name);
         }
 
         body {
-            background-color: #f5f5f5;
+            background-color: #e3f2fd;
             min-height: 100vh;
         }
 
