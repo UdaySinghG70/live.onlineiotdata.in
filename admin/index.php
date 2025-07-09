@@ -885,17 +885,6 @@ if($adminDetails==null){
                 </div>
                 <div class="stats-value">Configure</div>
             </div>
-
-            <!-- Console Card -->
-            <a href="console.php" style="text-decoration:none;color:inherit;" class="stats-card clickable">
-                <div class="stats-header">
-                    <div class="stats-icon">
-                        <span class="material-icons">terminal</span>
-                    </div>
-                    <div class="stats-title">Console</div>
-                </div>
-                <div class="stats-value">View Debug Logs</div>
-            </a>
         </div>
     </main>
 
