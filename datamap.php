@@ -316,12 +316,12 @@ $department_name = $userObj ? $userObj->department_name : '';
             margin-bottom: 5px;
         } */
 
-        .square[data-level="0"], .legend-square[data-level="0"] { background-color: #e9ecef; }   /* Light grey */
-        .square[data-level="1"], .legend-square[data-level="1"] { background-color: #bcdff1; }   /* Blue-grey */
-        .square[data-level="2"], .legend-square[data-level="2"] { background-color: #5fa8d3; }   /* Medium blue */
-        .square[data-level="3"], .legend-square[data-level="3"] { background-color: #1976d2; }   /* Deep blue */
-        .square[data-level="4"], .legend-square[data-level="4"] { background-color: #81c784; }   /* Soft green */
-        .square[data-level="5"], .legend-square[data-level="5"] { background-color: #388e3c; }   /* Deep green */
+        .square[data-level="0"], .legend-square[data-level="0"] { background-color: #e9ecef; }   /* Custom 1 */
+        .square[data-level="1"], .legend-square[data-level="1"] { background-color: #c0d5ce; }   /* Custom 2 */
+        .square[data-level="2"], .legend-square[data-level="2"] { background-color: #99bbb2; }   /* Custom 3 */
+        .square[data-level="3"], .legend-square[data-level="3"] { background-color: #73a393; }   /* Custom 4 */
+        .square[data-level="4"], .legend-square[data-level="4"] { background-color: #4d8876; }   /* Custom 5 */
+        .square[data-level="5"], .legend-square[data-level="5"] { background-color: #256f58; }   /* Custom 6 */
 
         .legend {
             display: flex;
@@ -814,19 +814,19 @@ $department_name = $userObj ? $userObj->department_name : '';
             // Add CSS for the new color scheme
             $('<style>')
                 .text(`
-                    .square[data-level="0"] { background-color: #e9ecef; }
-                    .square[data-level="1"] { background-color: #bcdff1; }
-                    .square[data-level="2"] { background-color: #5fa8d3; }
-                    .square[data-level="3"] { background-color: #1976d2; }
-                    .square[data-level="4"] { background-color: #81c784; }
-                    .square[data-level="5"] { background-color: #388e3c; }
+                    .square[data-level="0"] { background-color: #enecef; }
+                    .square[data-level="1"] { background-color: #c0d5ce; }
+                    .square[data-level="2"] { background-color: #99bbb2; }
+                    .square[data-level="3"] { background-color: #73a393; }
+                    .square[data-level="4"] { background-color: #4d8876; }
+                    .square[data-level="5"] { background-color: #256f58; }
                     
-                    .legend-square[data-level="0"] { background-color: #e9ecef; }
-                    .legend-square[data-level="1"] { background-color: #bcdff1; }
-                    .legend-square[data-level="2"] { background-color: #5fa8d3; }
-                    .legend-square[data-level="3"] { background-color: #1976d2; }
-                    .legend-square[data-level="4"] { background-color: #81c784; }
-                    .legend-square[data-level="5"] { background-color: #388e3c; }
+                    .legend-square[data-level="0"] { background-color: #enecef; }
+                    .legend-square[data-level="1"] { background-color: #c0d5ce; }
+                    .legend-square[data-level="2"] { background-color: #99bbb2; }
+                    .legend-square[data-level="3"] { background-color: #73a393; }
+                    .legend-square[data-level="4"] { background-color: #4d8876; }
+                    .legend-square[data-level="5"] { background-color: #256f58; }
                 `)
                 .appendTo('head');
 
