@@ -41,7 +41,7 @@ $department_name = $userObj ? $userObj->department_name : '';
         }
 
         body {
-            background-color: #e3f2fd;
+            background-color: #e3f2fd; /* light blue */
             padding: 0;
             min-height: 100vh;
         }
@@ -338,6 +338,12 @@ $department_name = $userObj ? $userObj->department_name : '';
             width: 15px;
             height: 15px;
             border-radius: 3px;
+        }
+
+        .legend-square.enlarged {
+            transform: scale(1.7);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            z-index: 2;
         }
 
         .device-section {
@@ -1039,6 +1045,10 @@ $department_name = $userObj ? $userObj->department_name : '';
             $(this).data('original-title', tooltipText);
             $(this).removeAttr('title'); // Prevent default browser tooltip
         }
+        // Enlarge corresponding legend-square
+        const level = $(this).attr('data-level');
+        $('.legend-square').removeClass('enlarged');
+        $(`.legend-square[data-level='${level}']`).addClass('enlarged');
     }).on('mousemove', '.square:not(.empty)', function(e) {
         // Position tooltip, keep inside viewport
         const tooltip = $('#custom-tooltip');
@@ -1062,6 +1072,8 @@ $department_name = $userObj ? $userObj->department_name : '';
             $(this).attr('title', originalTitle);
             $(this).removeData('original-title');
         }
+        // Remove legend-square enlargement
+        $('.legend-square').removeClass('enlarged');
     });
     </script>
 </body>
