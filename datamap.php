@@ -76,48 +76,67 @@ $department_name = $userObj ? $userObj->department_name : '';
         }
 
         .data-summary {
-            background-color: #f8f9fa;
+            background: #fff;
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            box-shadow: none;
+            padding: 12px 10px;
+            margin-bottom: 18px;
             display: flex;
-            gap: 20px;
+            gap: 10px;
             flex-wrap: wrap;
+            justify-content: space-between;
         }
-
         .summary-item {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            min-width: 140px;
+            flex: 1 1 180px;
+            padding: 8px 0;
         }
-
         .summary-icon {
-            width: 30px;
-            height: 30px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            background-color: #e9ecef;
+            background: #f3f6f9;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #495057;
+            color: #888;
+            font-size: 15px;
         }
-
         .summary-text {
             display: flex;
             flex-direction: column;
+            gap: 2px;
         }
-
         .summary-label {
-            font-size: 12px;
-            color: #6c757d;
+            font-size: 11px;
+            color: #888;
+            font-weight: 400;
         }
-
         .summary-value {
-            font-size: 16px;
-            font-weight: 600;
-            color: #212529;
+            font-size: 15px;
+            font-weight: 500;
+            color: #222;
         }
-
+        @media (max-width: 700px) {
+            .data-summary {
+                flex-direction: column;
+                gap: 0;
+                padding: 8px 4px;
+            }
+            .summary-item {
+                min-width: 0;
+                flex: 1 1 100%;
+                padding: 8px 0;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            .summary-item:last-child {
+                border-bottom: none;
+            }
+        }
 
 
         .device-selector {
@@ -699,28 +718,36 @@ $department_name = $userObj ? $userObj->department_name : '';
             </div>
             <div class="data-summary">
                 <div class="summary-item">
-                    <div class="summary-icon">📊</div>
+                    <div class="summary-icon" aria-label="Total Data Points">
+                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="10" width="3" height="7" rx="1.5" fill="#1976d2"/><rect x="8.5" y="5" width="3" height="12" rx="1.5" fill="#1976d2"/><rect x="15" y="2" width="3" height="15" rx="1.5" fill="#1976d2"/></svg>
+                    </div>
                     <div class="summary-text">
                         <span class="summary-label">Total Data Points</span>
                         <span class="summary-value" id="totalDataPoints">-</span>
                     </div>
                 </div>
                 <div class="summary-item">
-                    <div class="summary-icon">📅</div>
+                    <div class="summary-icon" aria-label="Active Days">
+                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="14" height="13" rx="2" fill="#43a047"/><rect x="6" y="8" width="8" height="2" rx="1" fill="#fff"/><rect x="6" y="12" width="5" height="2" rx="1" fill="#fff"/></svg>
+                    </div>
                     <div class="summary-text">
                         <span class="summary-label">Active Days</span>
                         <span class="summary-value" id="activeDays">-</span>
                     </div>
                 </div>
                 <div class="summary-item">
-                    <div class="summary-icon">📈</div>
+                    <div class="summary-icon" aria-label="Average Daily Entries">
+                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 15l4-4 4 4 6-6" stroke="#ffa000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="3" cy="15" r="1.5" fill="#ffa000"/><circle cx="7" cy="11" r="1.5" fill="#ffa000"/><circle cx="11" cy="15" r="1.5" fill="#ffa000"/><circle cx="17" cy="9" r="1.5" fill="#ffa000"/></svg>
+                    </div>
                     <div class="summary-text">
                         <span class="summary-label">Average Daily Entries</span>
                         <span class="summary-value" id="avgEntries">-</span>
                     </div>
                 </div>
                 <div class="summary-item">
-                    <div class="summary-icon">📆</div>
+                    <div class="summary-icon" aria-label="Today's Data">
+                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="14" height="13" rx="2" fill="#1976d2"/><rect x="6" y="8" width="8" height="2" rx="1" fill="#fff"/><rect x="6" y="12" width="5" height="2" rx="1" fill="#fff"/><circle cx="16" cy="7" r="2" fill="#43a047"/></svg>
+                    </div>
                     <div class="summary-text">
                         <span class="summary-label">Today's Data</span>
                         <span class="summary-value" id="todayDataPoints">-</span>
