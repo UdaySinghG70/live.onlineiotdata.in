@@ -161,7 +161,6 @@ $deviceArr=$ddao->getDeviceByUserName($user->user_name);
                            id="old_pass"
                            name="old_pass" 
                            class="form-control" 
-                           placeholder="Enter your current password"
                            onblur="if (this.hasAttribute('readonly')==false) {this.setAttribute('readonly','readonly');}" 
                            readonly 
                            onclick="if (this.hasAttribute('readonly')) {
@@ -177,7 +176,6 @@ $deviceArr=$ddao->getDeviceByUserName($user->user_name);
                            id="new_pass"
                            name="new_pass" 
                            class="form-control" 
-                           placeholder="Enter your new password"
                            onblur="if (this.hasAttribute('readonly')==false) {this.setAttribute('readonly','readonly');}" 
                            readonly 
                            onclick="if (this.hasAttribute('readonly')) {
@@ -193,7 +191,6 @@ $deviceArr=$ddao->getDeviceByUserName($user->user_name);
                            id="c_new_pass"
                            name="c_new_pass" 
                            class="form-control" 
-                           placeholder="Confirm your new password"
                            onblur="if (this.hasAttribute('readonly')==false) {this.setAttribute('readonly','readonly');}" 
                            readonly 
                            onclick="if (this.hasAttribute('readonly')) {
