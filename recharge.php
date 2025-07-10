@@ -41,60 +41,63 @@ $deviceArr=$ddao->getDeviceByUserName($user->user_name);
         }
 
         body {
-            background-color: #e3f2fd;
+            background-color: #e3f2fd; /* light blue */
             min-height: 100vh;
         }
 
         .main-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            max-width: 480px;
+            margin: 40px auto;
+            padding: 0 10px;
         }
 
         .recharge-card {
             background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            box-shadow: none;
+            padding: 24px 18px 18px 18px;
+            margin-top: 0;
         }
 
         .card-title {
-            color: #2c3e50;
-            font-size: 24px;
-            margin-bottom: 30px;
-            font-weight: 600;
+            color: #222;
+            font-size: 20px;
+            margin-bottom: 18px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            color: #4a5568;
-            font-weight: 500;
-            min-width: auto;
-            float: none;
+            margin-bottom: 5px;
+            color: #444;
+            font-weight: 400;
+            font-size: 13px;
         }
 
         .form-control {
             width: 100%;
-            max-width: 400px;
-            padding: 12px 15px;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
+            max-width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #cfd8dc;
+            border-radius: 4px;
             font-size: 14px;
-            color: #2d3748;
-            background-color: #fff;
-            transition: all 0.3s ease;
+            color: #222;
+            background-color: #f9f9f9;
+            transition: border-color 0.2s;
         }
 
         .form-control:focus {
             outline: none;
-            border-color: #4299e1;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+            border: 1.5px solid #1976d2 !important;
+            color: #222 !important;
+            background: #fff;
+            box-shadow: 0 0 0 2px #e3f2fd;
         }
 
         select.form-control {
@@ -106,72 +109,74 @@ $deviceArr=$ddao->getDeviceByUserName($user->user_name);
         }
 
         .btn-submit {
-            background: #0067ac;
+            background: #1976d2;
             color: #fff;
             border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
+            padding: 9px 0;
+            border-radius: 4px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            min-width: 120px;
+            font-size: 15px;
+            width: 100%;
+            margin-top: 8px;
+            transition: background 0.2s;
         }
 
         .btn-submit:hover {
-            background: #005491;
-            transform: translateY(-1px);
+            background: #1565c0;
         }
 
         .msgtask {
             display: block;
-            margin-top: 10px;
-            color: #4a5568;
-            font-size: 14px;
+            margin-top: 8px;
+            color: #888;
+            font-size: 13px;
         }
 
         .data {
             margin-top: 30px;
             background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            min-height: 100px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            box-shadow: none;
+            padding: 18px 12px;
+            min-height: 80px;
         }
 
         /* Table Styles */
         .recharge-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 10px;
+            font-size: 13px;
         }
 
         .recharge-table th {
-            background-color: #f8fafc;
-            color: #4a5568;
-            font-weight: 600;
-            padding: 12px;
+            background-color: #f5faff;
+            color: #333;
+            font-weight: 500;
+            padding: 8px;
             text-align: left;
-            border-bottom: 2px solid #e2e8f0;
+            border-bottom: 1.5px solid #e0e0e0;
         }
 
         .recharge-table td {
-            padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
-            color: #2d3748;
+            padding: 8px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #222;
         }
 
         .recharge-table tr:hover {
-            background-color: #f8fafc;
+            background-color: #f0f7fa;
         }
 
-        @media (max-width: 768px) {
-            .recharge-card {
-                padding: 20px;
+        @media (max-width: 480px) {
+            .main-container {
+                max-width: 98vw;
+                padding: 0 2vw;
             }
-
-            .form-control {
-                max-width: 100%;
+            .recharge-card, .data {
+                padding: 12px 4vw 10px 4vw;
             }
         }
     </style>
