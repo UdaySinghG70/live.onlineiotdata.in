@@ -58,4 +58,5 @@ echo "</select></td>"
     ."<span class='material-icons'>delete_outline</span>"
     ."</button>"
     ."</td>"
+    ."<td class='drag-handle text-center'><span class='material-icons' style='cursor:move;'>drag_indicator</span></td>"
     ."</tr>";
