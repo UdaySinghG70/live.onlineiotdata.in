@@ -415,6 +415,11 @@ if (isset($_GET['get_preset_params']) && isset($_GET['preset_name'])) {
         .flatpickr-calendar {
             z-index: 9999 !important;
         }
+        .drag-handle {
+            cursor: move;
+            color: #888;
+            font-size: 22px;
+        }
     </style>
 </head>
 <body>
@@ -587,6 +592,7 @@ if (isset($_GET['get_preset_params']) && isset($_GET['preset_name'])) {
 								<th>Unit</th>
 								<th>Position</th>
                                     <th>Action</th>
+                                    <th></th> <!-- Drag handle column -->
 							</tr>
 							</thead>
                             <tbody class="params_tbody"></tbody>
@@ -626,6 +632,7 @@ if (isset($_GET['get_preset_params']) && isset($_GET['preset_name'])) {
 								<th>Unit</th>
 								<th>Position</th>
                                     <th>Action</th>
+                                    <th></th> <!-- Drag handle column -->
 							</tr>
 							</thead>
                             <tbody class="params_tbody_db"></tbody>
@@ -729,6 +736,20 @@ if (isset($_GET['get_preset_params']) && isset($_GET['preset_name'])) {
                 $('.use-preset-btn').removeClass('active');
             });
 
+            function getParamTypeOptions(selected) {
+                var types = [
+                    'Date Time DD-MM-YYYY hh:mm',
+                    'Alpha',
+                    'Numeric',
+                    'Float'
+                ];
+                var html = '';
+                for (var i = 0; i < types.length; i++) {
+                    html += '<option value="' + types[i] + '"' + (selected === types[i] ? ' selected' : '') + '>' + types[i] + '</option>';
+                }
+                return html;
+            }
+
             // Helper to fill parameter table with correct field names
             function fillParamsTable(params, tbodySelector, type) {
                 var html = '';
@@ -738,19 +759,29 @@ if (isset($_GET['get_preset_params']) && isset($_GET['preset_name'])) {
                         html += '<tr>' +
                             '<td class="row_id_lbl">' + idx + '.</td>' +
                             '<td><input type="text" class="form-control param_name" name="param_name' + idx + '" value="' + params[i].param_name + '" required></td>' +
-                            '<td><input type="text" class="form-control param_type" name="param_type' + idx + '" value="' + params[i].param_type + '" required></td>' +
+                            '<td>' +
+                              '<select class="form-control param_type" name="param_type' + idx + '" required>' +
+                                getParamTypeOptions(params[i].param_type) +
+                              '</select>' +
+                            '</td>' +
                             '<td><input type="text" class="form-control unit" name="unit' + idx + '" value="' + (params[i].param_unit || '') + '"></td>' +
                             '<td><input type="number" class="form-control position" name="position' + idx + '" value="' + idx + '" min="1"></td>' +
                             '<td><button type="button" class="btn-remove remove-row-btn"><span class="material-icons">delete</span></button></td>' +
+                            '<td class="drag-handle text-center"><span class="material-icons" style="cursor:move;">drag_indicator</span></td>' +
                         '</tr>';
                     } else {
                         html += '<tr>' +
                             '<td class="row_id_lbl_db">' + idx + '.</td>' +
                             '<td><input type="text" class="form-control param_name_db" name="param_name_db' + idx + '" value="' + params[i].param_name + '" required></td>' +
-                            '<td><input type="text" class="form-control param_type_db" name="param_type_db' + idx + '" value="' + params[i].param_type + '" required></td>' +
+                            '<td>' +
+                              '<select class="form-control param_type_db" name="param_type_db' + idx + '" required>' +
+                                getParamTypeOptions(params[i].param_type) +
+                              '</select>' +
+                            '</td>' +
                             '<td><input type="text" class="form-control unit_db" name="unit_db' + idx + '" value="' + (params[i].param_unit || '') + '"></td>' +
                             '<td><input type="number" class="form-control position_db" name="position_db' + idx + '" value="' + idx + '" min="1"></td>' +
                             '<td><button type="button" class="btn-remove remove-row-btn"><span class="material-icons">delete</span></button></td>' +
+                            '<td class="drag-handle text-center"><span class="material-icons" style="cursor:move;">drag_indicator</span></td>' +
                         '</tr>';
                     }
                 }
@@ -777,8 +808,12 @@ if (isset($_GET['get_preset_params']) && isset($_GET['preset_name'])) {
             function updateParamTableIndexes(tbodySelector) {
                 $(tbodySelector).find('tr').each(function(idx) {
                     $(this).find('td:first').text(idx+1); // S.No.
-                    $(this).find('input[name^="paramPosition_db"]')
-                        .val(idx+1);
+                    // Update the correct position input to match S.No.
+                    if (tbodySelector === '.params_tbody') {
+                        $(this).find('input[name^="position"]').val(idx+1);
+                    } else if (tbodySelector === '.params_tbody_db') {
+                        $(this).find('input[name^="position_db"]').val(idx+1);
+                    }
                 });
             }
             // Delegate delete button click for both tables
@@ -789,6 +824,44 @@ if (isset($_GET['get_preset_params']) && isset($_GET['preset_name'])) {
             $(document).on('click', '.params_tbody_db .remove-row-btn', function() {
                 $(this).closest('tr').remove();
                 updateParamTableIndexes('.params_tbody_db');
+            });
+
+            // Auto-set unit for Date Time type
+            $(document).on('change', '.param_type', function() {
+                var val = $(this).val();
+                var unitInput = $(this).closest('tr').find('.unit');
+                if (val === 'Date Time DD-MM-YYYY hh:mm') {
+                    unitInput.val('DD-MM-YYYY hh:mm:ss');
+                } else {
+                    unitInput.val('');
+                }
+            });
+            $(document).on('change', '.param_type_db', function() {
+                var val = $(this).val();
+                var unitInput = $(this).closest('tr').find('.unit_db');
+                if (val === 'Date Time DD-MM-YYYY hh:mm') {
+                    unitInput.val('DD-MM-YYYY hh:mm:ss');
+                } else {
+                    unitInput.val('');
+                }
+            });
+
+            // Enable sortable for both parameter tables
+            $('.params_tbody').sortable({
+                handle: '.drag-handle',
+                axis: 'y',
+                update: function() {
+                    resetNames();
+                    updateParamTableIndexes('.params_tbody');
+                }
+            });
+            $('.params_tbody_db').sortable({
+                handle: '.drag-handle',
+                axis: 'y',
+                update: function() {
+                    resetNamesDb();
+                    updateParamTableIndexes('.params_tbody_db');
+                }
             });
         });
     </script>
