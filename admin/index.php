@@ -834,6 +834,214 @@ if($adminDetails==null){
             color: #b91c1c;
             border-color: #e03131;
         }
+        /* Minimal, modern modal for Configure Preset Parameters */
+        .modal-content.enhanced-modal {
+            background: #fff;
+            margin: 7vh auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 99%;
+            max-width: 900px;
+            max-height: 92vh;
+            box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+            overflow-y: auto;
+            font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif;
+        }
+        .modal-header.enhanced-modal-header {
+            background: none;
+            color: #222;
+            padding: 1.1rem 2rem 0.7rem 2rem;
+            border-radius: 12px 12px 0 0;
+            border-bottom: 1px solid #f2f2f2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header.enhanced-modal-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #23272f;
+            letter-spacing: 0.01em;
+        }
+        .close {
+            color: #b0b3b8;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0 0.5rem;
+            border-radius: 4px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .close:hover,
+        .close:focus {
+            background: #f3f4f6;
+            color: #23272f;
+        }
+        .enhanced-preset-form {
+            padding: 1.5rem 2rem 2rem 2rem;
+            background: #fff;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        #parametersList.scrollable-params {
+            max-height: 420px;
+            min-height: 180px;
+            overflow-y: auto;
+            margin-bottom: 0.5rem;
+            background: #f7f8fa;
+            border-radius: 10px;
+            padding: 1.7rem 1.2rem;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.03);
+        }
+        .enhanced-parameter-row {
+            background: none;
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 1.7rem;
+            padding: 0.5rem 0;
+            display: grid;
+            grid-template-columns: 2.5fr 1.2fr 1.2fr auto;
+            gap: 2.2rem;
+            align-items: end;
+        }
+        .enhanced-parameter-row .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .enhanced-parameter-row .form-group label {
+            font-size: 0.98rem;
+            color: #555;
+            font-weight: 400;
+            margin-bottom: 0.1rem;
+            letter-spacing: 0.01em;
+        }
+        .enhanced-parameter-row .form-group input,
+        .enhanced-parameter-row .form-group select {
+            font-size: 1.04rem;
+            padding: 0.95rem 0.85rem;
+            border-radius: 7px;
+            border: 1px solid #e0e3e8;
+            background: #fff;
+            transition: all 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+            color: #23272f;
+        }
+        .enhanced-parameter-row .form-group input:focus,
+        .enhanced-parameter-row .form-group select:focus {
+            border-color: #0067ac;
+            outline: none;
+            box-shadow: 0 0 0 2px #e3f2fd;
+        }
+        .enhanced-remove-btn {
+            background: #fff0f0;
+            border: 1.5px solid #ffd6d6;
+            color: #e03131;
+            border-radius: 7px;
+            font-size: 1.2rem;
+            padding: 0.4rem 0.9rem;
+            margin-left: 0.2rem;
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            min-height: 36px;
+            box-sizing: border-box;
+        }
+        .enhanced-remove-btn .material-icons {
+            font-size: 22px;
+            vertical-align: middle;
+            line-height: 1;
+        }
+        .enhanced-remove-btn:hover {
+            background: #ffe3e3;
+            color: #b91c1c;
+            border-color: #e03131;
+        }
+        .enhanced-add-btn {
+            background: #f6f8fa;
+            color: #0067ac;
+            border: 1px solid #b6e0fe;
+            font-weight: 500;
+            border-radius: 7px;
+            padding: 0.45rem 1.1rem;
+            font-size: 0.97rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            box-shadow: none;
+        }
+        .enhanced-add-btn:hover {
+            background: #e3f6ff;
+            color: #005a8f;
+            border-color: #90cdf4;
+        }
+        .form-group input[type="text"]::placeholder {
+            color: #b0b3b8;
+            opacity: 1;
+            font-size: 0.98rem;
+        }
+        .form-group select:invalid {
+            color: #b0b3b8;
+        }
+        @media (max-width: 768px) {
+            .modal-content.enhanced-modal {
+                width: 99vw !important;
+                margin: 2.5% auto;
+                border-radius: 8px;
+                max-height: 95vh;
+            }
+            .modal-header.enhanced-modal-header,
+            .enhanced-preset-form {
+                padding: 1rem;
+            }
+            .enhanced-parameter-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 0.5rem 0;
+            }
+            #parametersList.scrollable-params {
+                max-height: 300px;
+                min-height: 120px;
+                padding: 1rem 0.5rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .modal-content.enhanced-modal {
+                width: 100vw !important;
+                margin: 0;
+                border-radius: 0;
+                max-height: 100vh;
+            }
+            .modal-header.enhanced-modal-header {
+                border-radius: 0;
+                padding: 1rem 1rem 0.5rem 1rem;
+            }
+            .enhanced-preset-form {
+                padding: 1rem;
+            }
+            #parametersList.scrollable-params {
+                max-height: 180px;
+                min-height: 80px;
+                padding: 0.5rem 0.2rem;
+            }
+            .enhanced-parameter-row {
+                padding: 0.5rem 0;
+                gap: 0.75rem;
+            }
+            .enhanced-parameter-row .form-group input,
+            .enhanced-parameter-row .form-group select {
+                padding: 0.75rem;
+                font-size: 0.95rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -925,8 +1133,8 @@ if($adminDetails==null){
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Unit</label>
-                                    <input type="text" name="paramUnit[]" class="param-unit-input" placeholder="e.g., °C">
+                                    <label><span style="color:#e03131">*</span> Unit</label>
+                                    <input type="text" name="paramUnit[]" class="param-unit-input" placeholder="e.g., °C" required>
                                 </div>
                                 <button type="button" class="enhanced-remove-btn" title="Remove Parameter"><span class="material-icons">delete</span></button>
                             </div>
@@ -1100,11 +1308,11 @@ if($adminDetails==null){
             newRow.className = 'enhanced-parameter-row';
             newRow.innerHTML = `
                 <div class="form-group">
-                    <label>Parameter Name</label>
+                    <label><span style="color:#e03131">*</span> Parameter Name</label>
                     <input type="text" name="paramName[]" placeholder="e.g., Temperature" required>
                 </div>
                 <div class="form-group">
-                    <label>Type</label>
+                    <label><span style="color:#e03131">*</span> Type</label>
                     <select name="paramType[]" class="param-type-select" required>
                         <option value="">Select type</option>
                         <option value="Date Time">Date Time</option>
@@ -1114,8 +1322,8 @@ if($adminDetails==null){
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Unit</label>
-                    <input type="text" name="paramUnit[]" class="param-unit-input" placeholder="e.g., °C">
+                    <label><span style="color:#e03131">*</span> Unit</label>
+                    <input type="text" name="paramUnit[]" class="param-unit-input" placeholder="e.g., °C" required>
                 </div>
                 <button type="button" class="enhanced-remove-btn" title="Remove Parameter"><span class="material-icons">delete</span></button>
             `;
@@ -1168,11 +1376,11 @@ if($adminDetails==null){
                         parametersList.innerHTML = `
                             <div class="enhanced-parameter-row">
                                 <div class="form-group">
-                                    <label>Parameter Name</label>
+                                    <label><span style="color:#e03131">*</span> Parameter Name</label>
                                     <input type="text" name="paramName[]" placeholder="e.g., Temperature" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Type</label>
+                                    <label><span style="color:#e03131">*</span> Type</label>
                                     <select name="paramType[]" class="param-type-select" required>
                                         <option value="">Select type</option>
                                         <option value="Date Time">Date Time</option>
@@ -1182,8 +1390,8 @@ if($adminDetails==null){
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Unit</label>
-                                    <input type="text" name="paramUnit[]" class="param-unit-input" placeholder="e.g., °C">
+                                    <label><span style="color:#e03131">*</span> Unit</label>
+                                    <input type="text" name="paramUnit[]" class="param-unit-input" placeholder="e.g., °C" required>
                                 </div>
                                 <button type="button" class="enhanced-remove-btn" title="Remove Parameter"><span class="material-icons">delete</span></button>
                             </div>
