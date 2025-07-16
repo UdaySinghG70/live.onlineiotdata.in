@@ -78,18 +78,19 @@ function connectToMqtt() {
     $clientId = "php-mqtt-client-" . uniqid();
     
     try {
-        // Create MQTT client instance
+        // Always create a new client instance on reconnect
         $mqtt = new MqttClient(MQTT_HOST, MQTT_PORT, $clientId);
         logError("MQTT Client instance created");
         
-        // Set connection settings
+        // Set connection settings with clean session = false
         $connectionSettings = (new ConnectionSettings)
             ->setUsername(MQTT_USERNAME)
             ->setPassword(MQTT_PASSWORD)
             ->setKeepAliveInterval(60)
             ->setLastWillTopic('client/disconnect')
             ->setLastWillMessage('Client disconnected')
-            ->setLastWillQualityOfService(1);
+            ->setLastWillQualityOfService(1)
+            ->setCleanSession(false); // <-- Add this
         
         // Connect to the broker
         $mqtt->connect($connectionSettings);
@@ -97,7 +98,7 @@ function connectToMqtt() {
         $reconnectAttempts = 0;
         logError("Successfully connected to MQTT broker");
         
-        // Set up message handlers
+        // Set up message handlers (subscriptions)
         setupMessageHandlers();
         
         return true;
@@ -128,6 +129,7 @@ function setupMessageHandlers() {
     // Subscribe to topics
     $mqtt->subscribe('+/live', function ($topic, $message) {
         try {
+            logError("Received message on topic: $topic, message: $message");
             processLiveData($topic, $message);
         } catch (Exception $e) {
             logError("Error processing live data for topic: $topic", $e);
@@ -136,6 +138,7 @@ function setupMessageHandlers() {
 
     $mqtt->subscribe('+/data', function ($topic, $message) {
         try {
+            logError("Received message on topic: $topic, message: $message");
             processLoggedData($topic, $message);
         } catch (Exception $e) {
             logError("Error processing logged data for topic: $topic", $e);
@@ -144,10 +147,20 @@ function setupMessageHandlers() {
 }
 
 function handleDisconnection() {
-    global $reconnectAttempts, $lastReconnectTime, $isConnected;
+    global $reconnectAttempts, $lastReconnectTime, $isConnected, $mqtt;
     
     $isConnected = false;
     $currentTime = time();
+    
+    // Disconnect and cleanup the old client if it exists
+    if (isset($mqtt) && $mqtt instanceof MqttClient) {
+        try {
+            $mqtt->disconnect();
+        } catch (Exception $e) {
+            logError("Error during MQTT disconnect", $e);
+        }
+        unset($mqtt);
+    }
     
     // Check if we should attempt reconnection
     if ($currentTime - $lastReconnectTime >= RECONNECT_DELAY) {
@@ -192,6 +205,7 @@ try {
  * Format: value1,value2,value3,...,valuen,device_id
  */
 function processLiveData($topic, $message) {
+    logError("[LiveData] Received message on topic: $topic, message: $message");
     $values = explode(',', $message);
     $device_id = array_pop($values); // Get and remove device_id from the end
 
@@ -237,6 +251,7 @@ function processLiveData($topic, $message) {
  * Format: DDMMYYHHMM,value1,value2,...,valuen,device_id
  */
 function processLoggedData($topic, $message) {
+    logError("[LoggedData] Received message on topic: $topic, message: $message");
     $values = explode(',', $message);
     $device_id = array_pop($values); // Get and remove device_id from the end
     $timestamp = array_shift($values); // Get and remove timestamp from the start
