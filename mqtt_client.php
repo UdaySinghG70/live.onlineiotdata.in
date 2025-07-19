@@ -89,11 +89,10 @@ function connectToMqtt() {
             ->setKeepAliveInterval(60)
             ->setLastWillTopic('client/disconnect')
             ->setLastWillMessage('Client disconnected')
-            ->setLastWillQualityOfService(1)
-            ->setCleanSession(false); // <-- Add this
+            ->setLastWillQualityOfService(1);
         
         // Connect to the broker
-        $mqtt->connect($connectionSettings);
+        $mqtt->connect($connectionSettings, false); // Set clean session to false here
         $isConnected = true;
         $reconnectAttempts = 0;
         logError("Successfully connected to MQTT broker");
