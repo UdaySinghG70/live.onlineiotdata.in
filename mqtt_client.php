@@ -147,11 +147,8 @@ function setupMessageHandlers() {
     }, 0);
     logError("Subscribed to topic pattern: +/data");
     
-    // Add wildcard subscription to catch any unexpected topics
-    $mqtt->subscribe('#', function ($topic, $message) {
-        logError("Received message on unexpected topic: $topic, message: $message");
-    }, 0);
-    logError("Subscribed to wildcard topic pattern: #");
+    // Remove the wildcard subscription as it's causing duplicate processing
+    // The specific handlers above should catch all relevant messages
 }
 
 function handleDisconnection() {
