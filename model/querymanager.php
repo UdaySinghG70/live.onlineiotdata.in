@@ -103,6 +103,12 @@ class QueryManager{
         return self::getonerow($qry);
     }
 
+    // Alias for executeQuerySqli to maintain consistency
+    static public function executeQuery($qry)
+    {
+        return self::executeQuerySqli($qry);
+    }
+
     static public function prepareStatement($query) {
         $con = self::getSqlConnection();
         
