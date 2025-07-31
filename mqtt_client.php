@@ -44,6 +44,7 @@ $clientId = 'php_mqtt_client_' . rand(1, 10000);
 $reconnectAttempts = 0;
 $lastReconnectTime = 0;
 $isConnected = false;
+$lastPing = 0; // Add this line to track last ping time
 
 function logError($message, $error = null) {
     // Set timezone to IST
@@ -134,6 +135,7 @@ function setupMessageHandlers() {
             logError("Error processing live data for topic: $topic", $e);
         }
     }, 0);
+    logError("Subscribed to topic pattern: +/live");
 
     $mqtt->subscribe('+/data', function ($topic, $message) {
         try {
@@ -143,6 +145,13 @@ function setupMessageHandlers() {
             logError("Error processing logged data for topic: $topic", $e);
         }
     }, 0);
+    logError("Subscribed to topic pattern: +/data");
+    
+    // Add wildcard subscription to catch any unexpected topics
+    $mqtt->subscribe('#', function ($topic, $message) {
+        logError("Received message on unexpected topic: $topic, message: $message");
+    }, 0);
+    logError("Subscribed to wildcard topic pattern: #");
 }
 
 function handleDisconnection() {
@@ -255,36 +264,40 @@ function processLoggedData($topic, $message) {
     $device_id = array_pop($values); // Get and remove device_id from the end
     $timestamp = array_shift($values); // Get and remove timestamp from the start
     
-    // Verify device_id exists in devices table
-    $verifyQuery = "SELECT COUNT(*) as count FROM devices WHERE device_id = '$device_id'";
-    $result = QueryManager::getOneRow($verifyQuery);
-    
-    // If device not found, ignore the message
-    if (!$result || $result[0] == 0) {
-        error_log("Ignored MQTT message: Device ID '$device_id' not found in devices table");
-        return;
-    }
-    
-    // Parse timestamp for database date/time columns
-    $date = DateTime::createFromFormat('dmyHi', $timestamp);
-    if (!$date) {
-        error_log("Invalid timestamp format in MQTT message for device '$device_id'");
-        return;
-    }
-    
-    $formattedDate = $date->format('Y-m-d');
-    $formattedTime = $date->format('H:i:s');
-
-    // Store the raw data string (original message without device_id)
-    $dataString = $timestamp . ',' . implode(',', $values);
-    
-    // Store in logdata table
-    $query = "INSERT INTO logdata (date, time, device_id, data) 
-             VALUES ('$formattedDate', '$formattedTime', '$device_id', '$dataString')";
-    
     try {
+        // Verify device_id exists in devices table
+        $verifyQuery = "SELECT COUNT(*) as count FROM devices WHERE device_id = '$device_id'";
+        $result = QueryManager::getonerow($verifyQuery);
+        
+        // If device not found, ignore the message
+        if (!$result || $result[0] == 0) {
+            logError("Ignored MQTT message: Device ID '$device_id' not found in devices table");
+            return;
+        }
+        
+        // Parse timestamp for database date/time columns
+        $date = DateTime::createFromFormat('dmyHi', $timestamp);
+        if (!$date) {
+            logError("Invalid timestamp format in MQTT message for device '$device_id'. Timestamp: '$timestamp'");
+            return;
+        }
+        
+        $formattedDate = $date->format('Y-m-d');
+        $formattedTime = $date->format('H:i:s');
+
+        // Store the raw data string (original message without device_id)
+        $dataString = $timestamp . ',' . implode(',', $values);
+        
+        // Store in logdata table
+        $query = "INSERT INTO logdata (date, time, device_id, data) 
+                 VALUES ('$formattedDate', '$formattedTime', '$device_id', '$dataString')";
+        
         QueryManager::executeQuerySqli($query);
+        logError("Successfully stored MDATA for device '$device_id' with timestamp '$timestamp'");
+        
     } catch (Exception $e) {
-        error_log("Failed to store MQTT message for device '$device_id': " . $e->getMessage());
+        logError("Failed to store MQTT message for device '$device_id': " . $e->getMessage());
+        logError("Message content: $message");
+        logError("Parsed values - Device ID: $device_id, Timestamp: $timestamp, Values count: " . count($values));
     }
 }

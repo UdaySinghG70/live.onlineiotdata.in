@@ -97,6 +97,12 @@ class QueryManager{
   			
   	}
 
+    // Alias for getonerow to maintain consistency
+    static public function getSingleRow($qry)
+    {
+        return self::getonerow($qry);
+    }
+
     static public function prepareStatement($query) {
         $con = self::getSqlConnection();
         
