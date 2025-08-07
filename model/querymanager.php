@@ -22,8 +22,8 @@ class QueryManager{
   			}
   			
   			// Set wait_timeout and interactive_timeout
-  			self::$connection->query("SET SESSION wait_timeout=300");
-  			self::$connection->query("SET SESSION interactive_timeout=300");
+  			self::$connection->query("SET SESSION wait_timeout=28800");
+  			self::$connection->query("SET SESSION interactive_timeout=28800");
   		}
   		return self::$connection;
  	}
