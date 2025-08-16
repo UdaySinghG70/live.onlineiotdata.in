@@ -121,6 +121,11 @@ if ($type === 'csv') {
 
 if ($type === 'excel') {
     try {
+        // Increase execution time and memory limits for large datasets
+        set_time_limit(300); // 5 minutes
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '1G');
+        
         // Check if required extensions are available
         $required_extensions = ['zip', 'xml', 'xmlreader', 'xmlwriter', 'zlib', 'gd', 'mbstring', 'iconv', 'ctype', 'fileinfo'];
         $missing_extensions = [];
@@ -148,15 +153,12 @@ if ($type === 'excel') {
             throw new Exception('PhpSpreadsheet class not found. Please ensure PhpSpreadsheet is properly installed.');
         }
         
-        // Increase memory limit for large datasets
-        ini_set('memory_limit', '1G');
-        
         // Use memory-efficient approach for large datasets
         $dataCount = count($data);
-        $chunkSize = 1000; // Process 1000 rows at a time
+        $chunkSize = 500; // Reduced chunk size for better performance
         
-        if ($dataCount > 5000) {
-            // For very large datasets, use CSV with Excel formatting
+        if ($dataCount > 2000) {
+            // For large datasets, use CSV with Excel formatting (most efficient)
             $excel_filename = preg_replace('/\\.csv$/i', '.xlsx', $filename);
             
             // Create a temporary CSV file first
@@ -183,30 +185,28 @@ if ($type === 'excel') {
             }
             fclose($csv_handle);
             
-            // Create Excel file from CSV
-            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-            $sheet = $spreadsheet->getActiveSheet();
-            
-            // Import CSV data
+            // Create Excel file from CSV with optimized settings
             $csv_reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
             $csv_reader->setDelimiter(',');
             $csv_reader->setEnclosure('"');
             $csv_reader->setSheetIndex(0);
+            $csv_reader->setReadDataOnly(true); // Skip formatting for speed
             
             $spreadsheet = $csv_reader->load($temp_csv);
             $sheet = $spreadsheet->getActiveSheet();
             
-            // Autosize columns
+            // Basic column sizing (skip autosize for large datasets to save time)
             $colCount = count($header);
             for ($col = 1; $col <= $colCount; $col++) {
-                $sheet->getColumnDimensionByColumn($col)->setAutoSize(true);
+                $sheet->getColumnDimensionByColumn($col)->setWidth(15); // Fixed width instead of autosize
             }
             
-            // Output
+            // Output with optimized writer settings
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment; filename="' . $excel_filename . '"');
             
             $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer->setPreCalculateFormulas(false); // Disable formula calculation for speed
             $writer->save('php://output');
             
             // Clean up
@@ -228,12 +228,12 @@ if ($type === 'excel') {
             }
             $sheet->fromArray($header, NULL, 'A1');
             
-            // Process data in chunks to save memory
+            // Process data in chunks to save memory and time
             $sr = 1;
             $rowNum = 2;
             $chunks = array_chunk($data, $chunkSize);
             
-            foreach ($chunks as $chunk) {
+            foreach ($chunks as $chunkIndex => $chunk) {
                 foreach ($chunk as $row) {
                     $csvValues = $row['data'] ? explode(',', $row['data']) : [];
                     $line = [$sr++, $row['date'], $row['time']];
@@ -248,9 +248,12 @@ if ($type === 'excel') {
                 if (function_exists('gc_collect_cycles')) {
                     gc_collect_cycles();
                 }
+                
+                // Reset execution time limit after each chunk
+                set_time_limit(300);
             }
             
-            // Autosize columns
+            // Autosize columns only for smaller datasets
             $colCount = count($header);
             for ($col = 1; $col <= $colCount; $col++) {
                 $sheet->getColumnDimensionByColumn($col)->setAutoSize(true);
@@ -261,6 +264,7 @@ if ($type === 'excel') {
             header('Content-Disposition: attachment; filename="' . preg_replace('/\\.csv$/i', '.xlsx', $filename) . '"');
             
             $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer->setPreCalculateFormulas(false); // Disable formula calculation for speed
             $writer->save('php://output');
             
             // Clean up
@@ -282,9 +286,9 @@ if ($type === 'excel') {
         echo '<p>The Excel export failed due to: <strong>' . htmlspecialchars($e->getMessage()) . '</strong></p>';
         echo '<p>This usually happens with very large datasets. Please try:</p>';
         echo '<ul>';
-        echo '<li>Reducing the date range</li>';
-        echo '<li>Downloading as CSV instead</li>';
-        echo '<li>Contacting your administrator to increase server memory limits</li>';
+        echo '<li>Reducing the date range (try smaller time periods)</li>';
+        echo '<li>Downloading as CSV instead (faster and more reliable)</li>';
+        echo '<li>Contacting your administrator to increase server limits</li>';
         echo '</ul>';
         echo '<p><a href="javascript:history.back()">Go Back</a></p>';
         echo '</body></html>';
