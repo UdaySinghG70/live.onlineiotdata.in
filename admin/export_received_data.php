@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 if(!isset($_SESSION['admin_name'])) {
     header('HTTP/1.1 401 Unauthorized');
     exit('Unauthorized');
@@ -116,40 +120,96 @@ if ($type === 'csv') {
 }
 
 if ($type === 'excel') {
-    require_once '../vendor/autoload.php';
-    $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-    $sheet = $spreadsheet->getActiveSheet();
-    // Header row
-    $header = ['Sr. No.', 'Date', 'Time'];
-    foreach ($params as $p) {
-        $h = $p['name'];
-        if ($p['unit']) $h .= ' [' . $p['unit'] . ']';
-        $header[] = $h;
-    }
-    $sheet->fromArray($header, NULL, 'A1');
-    // Data rows
-    $sr = 1;
-    $rowNum = 2;
-    foreach ($data as $row) {
-        $csvValues = $row['data'] ? explode(',', $row['data']) : [];
-        $line = [$sr++, $row['date'], $row['time']];
-        foreach ($csvValues as $v) {
-            $line[] = trim($v);
+    try {
+        // Check if required extensions are available
+        $required_extensions = ['zip', 'xml', 'xmlreader', 'xmlwriter', 'zlib', 'gd', 'mbstring', 'iconv', 'ctype', 'fileinfo'];
+        $missing_extensions = [];
+        
+        foreach ($required_extensions as $ext) {
+            if (!extension_loaded($ext)) {
+                $missing_extensions[] = $ext;
+            }
         }
-        $sheet->fromArray($line, NULL, 'A' . $rowNum);
-        $rowNum++;
+        
+        if (!empty($missing_extensions)) {
+            throw new Exception('Missing required PHP extensions: ' . implode(', ', $missing_extensions));
+        }
+        
+        // Check if autoload file exists
+        $autoload_path = '../vendor/autoload.php';
+        if (!file_exists($autoload_path)) {
+            throw new Exception('Composer autoload file not found at: ' . $autoload_path);
+        }
+        
+        require_once $autoload_path;
+        
+        // Check if PhpSpreadsheet class exists
+        if (!class_exists('\PhpOffice\PhpSpreadsheet\Spreadsheet')) {
+            throw new Exception('PhpSpreadsheet class not found. Please ensure PhpSpreadsheet is properly installed.');
+        }
+        
+        // Increase memory limit for large datasets
+        ini_set('memory_limit', '512M');
+        
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        
+        // Header row
+        $header = ['Sr. No.', 'Date', 'Time'];
+        foreach ($params as $p) {
+            $h = $p['name'];
+            if ($p['unit']) $h .= ' [' . $p['unit'] . ']';
+            $header[] = $h;
+        }
+        $sheet->fromArray($header, NULL, 'A1');
+        
+        // Data rows
+        $sr = 1;
+        $rowNum = 2;
+        foreach ($data as $row) {
+            $csvValues = $row['data'] ? explode(',', $row['data']) : [];
+            $line = [$sr++, $row['date'], $row['time']];
+            foreach ($csvValues as $v) {
+                $line[] = trim($v);
+            }
+            $sheet->fromArray($line, NULL, 'A' . $rowNum);
+            $rowNum++;
+        }
+        
+        // Autosize columns
+        $colCount = count($header);
+        for ($col = 1; $col <= $colCount; $col++) {
+            $sheet->getColumnDimensionByColumn($col)->setAutoSize(true);
+        }
+        
+        // Output
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . preg_replace('/\\.csv$/i', '.xlsx', $filename) . '"');
+        
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save('php://output');
+        
+        // Clean up
+        $spreadsheet->disconnectWorksheets();
+        unset($spreadsheet);
+        
+        exit;
+        
+    } catch (Exception $e) {
+        // Log the error for debugging
+        error_log('Excel export error: ' . $e->getMessage());
+        
+        // Return a user-friendly error message
+        header('HTTP/1.1 500 Internal Server Error');
+        header('Content-Type: text/html; charset=utf-8');
+        echo '<html><body>';
+        echo '<h2>Excel Export Error</h2>';
+        echo '<p>The Excel export failed due to: <strong>' . htmlspecialchars($e->getMessage()) . '</strong></p>';
+        echo '<p>Please try downloading as CSV instead, or contact your administrator.</p>';
+        echo '<p><a href="javascript:history.back()">Go Back</a></p>';
+        echo '</body></html>';
+        exit;
     }
-    // Autosize columns
-    $colCount = count($header);
-    for ($col = 1; $col <= $colCount; $col++) {
-        $sheet->getColumnDimensionByColumn($col)->setAutoSize(true);
-    }
-    // Output
-    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header('Content-Disposition: attachment; filename="' . preg_replace('/\\.csv$/i', '.xlsx', $filename) . '"');
-    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-    $writer->save('php://output');
-    exit;
 }
 
 exit('Invalid export type'); 
