@@ -121,10 +121,37 @@ if ($type === 'csv') {
 
 if ($type === 'excel') {
     try {
+        // Check data size and provide appropriate solution
+        $dataCount = count($data);
+        
+        if ($dataCount > 10000) {
+            // For very large datasets, redirect to CSV with explanation
+            header('HTTP/1.1 200 OK');
+            header('Content-Type: text/html; charset=utf-8');
+            echo '<html><body>';
+            echo '<h2>Large Dataset Detected</h2>';
+            echo '<p>Your dataset contains <strong>' . number_format($dataCount) . ' records</strong>, which is too large for Excel export.</p>';
+            echo '<p>For datasets this large, Excel export may timeout or cause server issues.</p>';
+            echo '<h3>Recommended Solutions:</h3>';
+            echo '<ul>';
+            echo '<li><strong>Download as CSV</strong> - Faster and more reliable for large datasets</li>';
+            echo '<li><strong>Reduce date range</strong> - Try smaller time periods (e.g., 1-2 days instead of months)</li>';
+            echo '<li><strong>Use pagination</strong> - Download data in smaller chunks</li>';
+            echo '</ul>';
+            echo '<p><a href="javascript:history.back()">Go Back</a> | <a href="' . $_SERVER['REQUEST_URI'] . '&type=csv">Download as CSV</a></p>';
+            echo '</body></html>';
+            exit;
+        }
+        
         // Increase execution time and memory limits for large datasets
-        set_time_limit(300); // 5 minutes
-        ini_set('max_execution_time', 300);
-        ini_set('memory_limit', '1G');
+        set_time_limit(600); // 10 minutes
+        ini_set('max_execution_time', 600);
+        ini_set('memory_limit', '2G');
+        
+        // Disable output buffering to prevent memory issues
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
         
         // Check if required extensions are available
         $required_extensions = ['zip', 'xml', 'xmlreader', 'xmlwriter', 'zlib', 'gd', 'mbstring', 'iconv', 'ctype', 'fileinfo'];
@@ -153,124 +180,63 @@ if ($type === 'excel') {
             throw new Exception('PhpSpreadsheet class not found. Please ensure PhpSpreadsheet is properly installed.');
         }
         
-        // Use memory-efficient approach for large datasets
-        $dataCount = count($data);
-        $chunkSize = 500; // Reduced chunk size for better performance
+        // Use streaming approach for all Excel exports
+        $excel_filename = preg_replace('/\\.csv$/i', '.xlsx', $filename);
         
-        if ($dataCount > 2000) {
-            // For large datasets, use CSV with Excel formatting (most efficient)
-            $excel_filename = preg_replace('/\\.csv$/i', '.xlsx', $filename);
-            
-            // Create a temporary CSV file first
-            $temp_csv = tempnam(sys_get_temp_dir(), 'excel_export_');
-            $csv_handle = fopen($temp_csv, 'w');
-            
-            // Write CSV data
-            $header = ['Sr. No.', 'Date', 'Time'];
-            foreach ($params as $p) {
-                $h = $p['name'];
-                if ($p['unit']) $h .= ' [' . $p['unit'] . ']';
-                $header[] = $h;
-            }
-            fputcsv($csv_handle, $header);
-            
-            $sr = 1;
-            foreach ($data as $row) {
-                $csvValues = $row['data'] ? explode(',', $row['data']) : [];
-                $line = [$sr++, $row['date'], $row['time']];
-                foreach ($csvValues as $v) {
-                    $line[] = trim($v);
-                }
-                fputcsv($csv_handle, $line);
-            }
-            fclose($csv_handle);
-            
-            // Create Excel file from CSV with optimized settings
-            $csv_reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
-            $csv_reader->setDelimiter(',');
-            $csv_reader->setEnclosure('"');
-            $csv_reader->setSheetIndex(0);
-            $csv_reader->setReadDataOnly(true); // Skip formatting for speed
-            
-            $spreadsheet = $csv_reader->load($temp_csv);
-            $sheet = $spreadsheet->getActiveSheet();
-            
-            // Basic column sizing (skip autosize for large datasets to save time)
-            $colCount = count($header);
-            for ($col = 1; $col <= $colCount; $col++) {
-                $sheet->getColumnDimensionByColumn($col)->setWidth(15); // Fixed width instead of autosize
-            }
-            
-            // Output with optimized writer settings
-            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment; filename="' . $excel_filename . '"');
-            
-            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-            $writer->setPreCalculateFormulas(false); // Disable formula calculation for speed
-            $writer->save('php://output');
-            
-            // Clean up
-            $spreadsheet->disconnectWorksheets();
-            unset($spreadsheet);
-            unlink($temp_csv);
-            
-        } else {
-            // For smaller datasets, use the original approach with chunked processing
-            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-            $sheet = $spreadsheet->getActiveSheet();
-            
-            // Header row
-            $header = ['Sr. No.', 'Date', 'Time'];
-            foreach ($params as $p) {
-                $h = $p['name'];
-                if ($p['unit']) $h .= ' [' . $p['unit'] . ']';
-                $header[] = $h;
-            }
-            $sheet->fromArray($header, NULL, 'A1');
-            
-            // Process data in chunks to save memory and time
-            $sr = 1;
-            $rowNum = 2;
-            $chunks = array_chunk($data, $chunkSize);
-            
-            foreach ($chunks as $chunkIndex => $chunk) {
-                foreach ($chunk as $row) {
-                    $csvValues = $row['data'] ? explode(',', $row['data']) : [];
-                    $line = [$sr++, $row['date'], $row['time']];
-                    foreach ($csvValues as $v) {
-                        $line[] = trim($v);
-                    }
-                    $sheet->fromArray($line, NULL, 'A' . $rowNum);
-                    $rowNum++;
-                }
-                
-                // Force garbage collection after each chunk
-                if (function_exists('gc_collect_cycles')) {
-                    gc_collect_cycles();
-                }
-                
-                // Reset execution time limit after each chunk
-                set_time_limit(300);
-            }
-            
-            // Autosize columns only for smaller datasets
-            $colCount = count($header);
-            for ($col = 1; $col <= $colCount; $col++) {
-                $sheet->getColumnDimensionByColumn($col)->setAutoSize(true);
-            }
-            
-            // Output
-            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment; filename="' . preg_replace('/\\.csv$/i', '.xlsx', $filename) . '"');
-            
-            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-            $writer->setPreCalculateFormulas(false); // Disable formula calculation for speed
-            $writer->save('php://output');
-            
-            // Clean up
-            $spreadsheet->disconnectWorksheets();
-            unset($spreadsheet);
+        // Create a temporary CSV file first (most efficient approach)
+        $temp_csv = tempnam(sys_get_temp_dir(), 'excel_export_');
+        $csv_handle = fopen($temp_csv, 'w');
+        
+        // Write CSV data
+        $header = ['Sr. No.', 'Date', 'Time'];
+        foreach ($params as $p) {
+            $h = $p['name'];
+            if ($p['unit']) $h .= ' [' . $p['unit'] . ']';
+            $header[] = $h;
         }
+        fputcsv($csv_handle, $header);
+        
+        $sr = 1;
+        foreach ($data as $row) {
+            $csvValues = $row['data'] ? explode(',', $row['data']) : [];
+            $line = [$sr++, $row['date'], $row['time']];
+            foreach ($csvValues as $v) {
+                $line[] = trim($v);
+            }
+            fputcsv($csv_handle, $line);
+        }
+        fclose($csv_handle);
+        
+        // Create Excel file from CSV with optimized settings
+        $csv_reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+        $csv_reader->setDelimiter(',');
+        $csv_reader->setEnclosure('"');
+        $csv_reader->setSheetIndex(0);
+        $csv_reader->setReadDataOnly(true); // Skip formatting for speed
+        
+        $spreadsheet = $csv_reader->load($temp_csv);
+        $sheet = $spreadsheet->getActiveSheet();
+        
+        // Basic column sizing (skip autosize for large datasets to save time)
+        $colCount = count($header);
+        for ($col = 1; $col <= $colCount; $col++) {
+            $sheet->getColumnDimensionByColumn($col)->setWidth(15); // Fixed width instead of autosize
+        }
+        
+        // Output with optimized writer settings
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $excel_filename . '"');
+        header('Cache-Control: no-cache, must-revalidate');
+        header('Pragma: no-cache');
+        
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->setPreCalculateFormulas(false); // Disable formula calculation for speed
+        $writer->save('php://output');
+        
+        // Clean up
+        $spreadsheet->disconnectWorksheets();
+        unset($spreadsheet);
+        unlink($temp_csv);
         
         exit;
         
@@ -284,13 +250,14 @@ if ($type === 'excel') {
         echo '<html><body>';
         echo '<h2>Excel Export Error</h2>';
         echo '<p>The Excel export failed due to: <strong>' . htmlspecialchars($e->getMessage()) . '</strong></p>';
-        echo '<p>This usually happens with very large datasets. Please try:</p>';
+        echo '<p>This usually happens with very large datasets or server limitations. Please try:</p>';
         echo '<ul>';
-        echo '<li>Reducing the date range (try smaller time periods)</li>';
-        echo '<li>Downloading as CSV instead (faster and more reliable)</li>';
-        echo '<li>Contacting your administrator to increase server limits</li>';
+        echo '<li><strong>Download as CSV</strong> - More reliable for large datasets</li>';
+        echo '<li><strong>Reduce the date range</strong> - Try smaller time periods (1-2 days)</li>';
+        echo '<li><strong>Use pagination</strong> - Download data in smaller chunks</li>';
+        echo '<li><strong>Contact administrator</strong> - Server may need configuration updates</li>';
         echo '</ul>';
-        echo '<p><a href="javascript:history.back()">Go Back</a></p>';
+        echo '<p><a href="javascript:history.back()">Go Back</a> | <a href="' . $_SERVER['REQUEST_URI'] . '&type=csv">Download as CSV</a></p>';
         echo '</body></html>';
         exit;
     }
