@@ -132,329 +132,160 @@ if ($type === 'excel') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Large Dataset - Cloud Data Monitoring</title>
-    <link rel="icon" type="image/png" href="../images/icons/favicon.png"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Large Dataset - Export</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
-
+        
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.5;
             padding: 20px;
         }
-
+        
         .container {
+            max-width: 500px;
+            margin: 40px auto;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-            max-width: 600px;
-            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             overflow: hidden;
-            animation: slideUp 0.6s ease-out;
         }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
+        
         .header {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-            position: relative;
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
         }
-
-        .header::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'4\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.3;
-        }
-
-        .header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .header p {
-            font-size: 16px;
-            opacity: 0.9;
-            position: relative;
-            z-index: 1;
-        }
-
-        .icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-            display: block;
-            position: relative;
-            z-index: 1;
-        }
-
-        .content {
-            padding: 40px 30px;
-        }
-
-        .stats-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 30px;
-            border-left: 4px solid #ff6b6b;
-        }
-
-        .stats-number {
-            font-size: 32px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 8px;
-        }
-
-        .stats-label {
-            color: #6c757d;
-            font-size: 14px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .solutions {
-            margin-bottom: 30px;
-        }
-
-        .solutions h3 {
-            font-size: 20px;
+        
+        .header h2 {
+            font-size: 18px;
             font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: #495057;
+            margin-bottom: 4px;
         }
-
+        
+        .header p {
+            font-size: 14px;
+            color: #6c757d;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .alert {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+        
+        .solutions {
+            margin-bottom: 20px;
+        }
+        
+        .solutions h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 12px;
+        }
+        
         .solution-item {
             display: flex;
             align-items: flex-start;
-            gap: 15px;
-            padding: 16px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            transition: all 0.3s ease;
-            border: 1px solid #e9ecef;
-        }
-
-        .solution-item:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
-        }
-
-        .solution-icon {
-            background: #3498db;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 18px;
-        }
-
-        .solution-content h4 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 4px;
-        }
-
-        .solution-content p {
-            font-size: 14px;
+            margin-bottom: 8px;
+            font-size: 13px;
             color: #6c757d;
-            line-height: 1.5;
         }
-
+        
+        .solution-item:before {
+            content: "•";
+            color: #007bff;
+            font-weight: bold;
+            margin-right: 8px;
+            margin-top: 1px;
+        }
+        
         .actions {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
         }
-
+        
         .btn {
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 6px;
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
             border: none;
             cursor: pointer;
-            flex: 1;
-            min-width: 140px;
-            justify-content: center;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
-        }
-
-        .btn-secondary {
-            background: #f8f9fa;
-            color: #6c757d;
-            border: 2px solid #e9ecef;
-        }
-
-        .btn-secondary:hover {
-            background: #e9ecef;
-            color: #495057;
-            transform: translateY(-2px);
-        }
-
-        .info-box {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            border: 1px solid #90caf9;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-
-        .info-box h4 {
-            color: #1565c0;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
-
-        .info-box p {
-            color: #1976d2;
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        
+        .icon {
             font-size: 14px;
-            line-height: 1.6;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                border-radius: 15px;
-            }
-            
-            .header {
-                padding: 25px 20px;
-            }
-            
-            .content {
-                padding: 30px 20px;
-            }
-            
-            .actions {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <span class="material-icons icon">data_usage</span>
-            <h1>Large Dataset Detected</h1>
-            <p>Your export request contains a significant amount of data</p>
+            <h2>Large Dataset Detected</h2>
+            <p>' . number_format($dataCount) . ' records found</p>
         </div>
         
         <div class="content">
-            <div class="stats-card">
-                <div class="stats-number">' . number_format($dataCount) . '</div>
-                <div class="stats-label">Total Records</div>
-            </div>
-            
-            <div class="info-box">
-                <h4><span class="material-icons" style="font-size: 20px;">info</span>Why Excel Export is Limited</h4>
-                <p>Excel exports with more than 10,000 records can cause server timeouts, memory issues, and slow performance. For optimal reliability and speed, we recommend using CSV format for large datasets.</p>
+            <div class="alert">
+                Excel export may timeout with datasets this large. CSV is recommended for better performance.
             </div>
             
             <div class="solutions">
-                <h3><span class="material-icons">lightbulb</span>Recommended Solutions</h3>
-                
-                <div class="solution-item">
-                    <div class="solution-icon">
-                        <span class="material-icons">download</span>
-                    </div>
-                    <div class="solution-content">
-                        <h4>Download as CSV</h4>
-                        <p>Faster, more reliable, and handles unlimited records. Opens perfectly in Excel, Google Sheets, and other applications.</p>
-                    </div>
-                </div>
-                
-                <div class="solution-item">
-                    <div class="solution-icon" style="background: #27ae60;">
-                        <span class="material-icons">schedule</span>
-                    </div>
-                    <div class="solution-content">
-                        <h4>Reduce Date Range</h4>
-                        <p>Try smaller time periods like 1-2 days or weekly chunks to stay under the 10,000 record limit.</p>
-                    </div>
-                </div>
-                
-                <div class="solution-item">
-                    <div class="solution-icon" style="background: #f39c12;">
-                        <span class="material-icons">view_list</span>
-                    </div>
-                    <div class="solution-content">
-                        <h4>Use Pagination</h4>
-                        <p>Download data in smaller chunks using the pagination controls (50 records per page).</p>
-                    </div>
-                </div>
+                <h3>Recommended Solutions:</h3>
+                <div class="solution-item">Download as CSV - Faster and more reliable</div>
+                <div class="solution-item">Reduce date range - Try 1-2 days instead of months</div>
+                <div class="solution-item">Use pagination - Download in smaller chunks</div>
             </div>
             
             <div class="actions">
                 <a href="' . $_SERVER['REQUEST_URI'] . '&type=csv" class="btn btn-primary">
-                    <span class="material-icons">file_download</span>
-                    Download as CSV
+                    <span class="icon">📊</span>
+                    Download CSV
                 </a>
                 <a href="javascript:history.back()" class="btn btn-secondary">
-                    <span class="material-icons">arrow_back</span>
+                    <span class="icon">←</span>
                     Go Back
                 </a>
             </div>
