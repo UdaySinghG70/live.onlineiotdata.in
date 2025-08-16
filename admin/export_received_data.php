@@ -284,9 +284,9 @@ if ($type === 'excel') {
                     <span class="icon">📊</span>
                     Download CSV
                 </a>
-                <a href="javascript:history.back()" class="btn btn-secondary">
-                    <span class="icon">←</span>
-                    Go Back
+                <a href="javascript:window.close()" class="btn btn-secondary">
+                    <span class="icon">✕</span>
+                    Exit
                 </a>
             </div>
         </div>
